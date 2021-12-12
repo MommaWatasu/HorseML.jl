@@ -35,7 +35,7 @@ This model is the polynomial Regression:
 [coveralls-img]: https://coveralls.io/repos/github/MommaWatasu/HorseML.jl/badge.svg?branch=master
 [coveralls-url]: https://coveralls.io/github/MommaWatasu/HorseML.jl?branch=master
 
-[codecov-img]: https://codecov.io/gh/MommaWatasu/HorseML.jl/branch/master/graph/badge.svg?token=x7YKbXMjPE
+[codecov-img]: https://codecov.io/gh/MommaWatasu/HorseML.jl/branch/master/graph/badge.svg?token=LA9W61IWmW
 [codecov-url]: https://codecov.io/gh/MommaWatasu/HorseML.jl
 
 [docs-dev-img]: https://img.shields.io/badge/docs-dev-blue.svg
