@@ -1,10 +1,10 @@
 """
-    dataloader(name; header=true, dir=learninghorsedatasets)
+    dataloader(name; header=true, dir="HorseMLdatasets")
 Load a data for Machine Learning. `name` is either the name of the datasets or the full path of the data file to be loaded. The following three can be specified as the name of the dataset in `name`.
 - `MNIST` : The MNIST Datasets
 - `iris` : The iris Datasets
 - `BostonHousing` : Boston Housing DataSets
-And these datasets are downloaded and saved by creating a `dir` folder under the home directly(i.e. it is saved in the `/home_directory/learninghorsedatasets` by default).
+And these datasets are downloaded and saved by creating a `dir` folder under the home directly(i.e. it is saved in the `/home_directory/HorseMLdatasets` by default).
 When importing a data file, you can specify whether to read the header with `header`.
 
 # Example
@@ -14,7 +14,7 @@ julia> dataloader("MNIST");
 julia> dataloader("/home/ubuntu/data/data.csv", header = false)
 ```
 """
-function dataloader(name; header = true, dir = "learningdatasets")
+function dataloader(name; header = true, dir = "HorseMLdatasets")
     hd = homedir()
     dir = joinpath(hd, dir)
     mkpath(dir)

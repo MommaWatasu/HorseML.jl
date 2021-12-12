@@ -1,4 +1,4 @@
-using LearningHorse.NeuralNetwork
+using HorseML.NeuralNetwork
 
 @testset "NeuralNetwork" begin
     #Test for utils
