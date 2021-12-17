@@ -1,24 +1,34 @@
-function dense_w(in_size, out_size, m)
+function dense_w(in_size, out_size, m; high_accuracy::Bool=false)
     if m == "Xavier"
-        return randn((out_size, in_size)) ./ sqrt(in_size)
+        w = randn((out_size, in_size)) ./ sqrt(in_size)
     elseif m == "He"
-        return randn((out_size, in_size)) ./ sqrt(in_size) .* sqrt(2)
+        w = randn((out_size, in_size)) ./ sqrt(in_size) .* sqrt(2)
     else
         try
-            m(out_size, in_size)
+            w = m(out_size, in_size)
         catch
             throw(ArgumentError("`set_w` must be `Xavier`, `He` or a function to create weight."))
         end
     end
+    if !high_accuracy
+        return Float32.(w)
+    else
+        return w
+    end
 end
 
-function conv_w(K, io, m)
+function conv_w(K, io, m; high_accuracy::Bool=false)
     if m == "Xavier"
-        return randn(K..., io...) ./ sqrt(io[1])
+        w = randn(K..., io...) ./ sqrt(io[1])
     elseif m == "He"
-        return randn(K..., io...) ./ sqrt(io[1]) .* sqrt(2)
+        w = randn(K..., io...) ./ sqrt(io[1]) .* sqrt(2)
     else
         throw(ArgumentError("Custom initialization functions aren't yet aupported!"))
+    end
+    if !high_accuracy
+        return Float32.(w)
+    else
+        return w
     end
 end
 

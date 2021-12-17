@@ -27,26 +27,30 @@ julia> C(rand(10, 10, 2, 5)) |> size
 (9, 9, 2, 5)
 ```
 """
-struct Conv{N, M, K, I, O} <: Param
+struct Conv{N, M, K, I, O}
     σ
     weight
     bias
     stride::NTuple{N, Int}
     padding::NTuple{M, Int}
     dilation::NTuple{N, Int}
+    high_accuracy::Bool
 end
 
-function Conv(weight::AbstractArray{T, N}, σ, k::Tuple, io::Pair{<:Integer, <:Integer}; stride = 1, padding = 0, dilation=1) where {N, T}
+function Conv(weight::AbstractArray{T, N}, σ, k::Tuple, io::Pair{<:Integer, <:Integer};
+        stride = 1, padding = 0, dilation=1, high_accuracy::Bool=false) where {N, T}
     stride = expand(Val(N-2), stride)
     dilation = expand(Val(N-2), dilation)
     padding = expand_padding(padding, size(weight)[1:N-2], dilation, stride)
     bias = create_bias(weight, size(weight, N))
-    return Conv{length(stride), length(padding), k, io...}(σ, weight, bias, stride, padding, dilation)
+    return Conv{length(stride), length(padding), k, io...}(σ, weight, bias,
+        stride, padding, dilation, high_accuracy)
 end
 
-function Conv(k::NTuple{N, Int}, io::Pair{<:Integer, <:Integer}, σ; stride = 1, padding = 0, dilation=1, set_w = "Xavier") where {N}
-    weight = conv_w(k, io, set_w)
-    return Conv(weight, σ, k, io, stride = stride, padding = padding, dilation = dilation)
+function Conv(k::NTuple{N, Int}, io::Pair{<:Integer, <:Integer}, σ;
+        stride = 1, padding = 0, dilation=1, set_w = "Xavier", high_accuracy::Bool=false) where {N}
+    weight = conv_w(k, io, set_w, high_accuracy=high_accuracy)
+    return Conv(weight, σ, k, io, stride = stride, padding = padding, dilation = dilation, high_accuracy=high_accuracy)
 end
 
 function Base.show(io::IO, C::Conv{N, M, K, I, O}) where {N, M, K, I, O}
@@ -57,6 +61,9 @@ end
 function (C::Conv)(x)
     σ, b, w = C.σ, C.bias, C.weight
     dim = DenseConvDims(x, w, stride = C.stride, padding = C.padding, dilation = C.dilation)
+    if !C.high_accuracy && isa(x, AbstractArray{Float64})
+        x = Float32.(x)
+    end
     return σ.(conv(x, w, dim).+b)
 end
 
