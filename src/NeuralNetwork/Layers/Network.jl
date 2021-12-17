@@ -1,10 +1,4 @@
 using Random
-abstract type Layer end
-#This type isn't Optimized.
-abstract type NParam <: Layer end
-#This type is Optimized.
-abstract type Param <: Layer end
-export Param, NParam
 
 include("Pooling.jl")
 include("Conv.jl")
@@ -26,9 +20,9 @@ Dense(IO:10=>5, σ:relu)
 ```
 """
 struct NetWork
-    net::Dict{Int, Layer}
+    net::Dict{Int, Any}
     function NetWork()
-        new(Dict{Int, Layer}())
+        new(Dict{Int, Any}())
     end
 end
 
@@ -77,15 +71,32 @@ julia> D(rand(Float64, 5)) |> size
 (2,)
 ```
 """
-struct Dense{W, B, F} <: Param
+struct Dense{W, B, F}
     w::W
     b::B
     σ::F
+    function Dense(W::M, σ::F) where {M<:AbstractMatrix, F}
+        b = create_bias(W, size(W, 1))
+        new{M, typeof(b), F}(W, b, σ)
+    end
 end
 
-function Dense(io::Pair{<:Integer, <:Integer}, σ; set_w = "Xavier", set_b = zeros)
-    w, b = dense_w(io..., set_w), set_b(io[2])
-    Dense(w, b, σ)
+function Dense(io::Pair{<:Integer, <:Integer}, σ;
+        initW=nothing, initb=nothing, set_w = "Xavier", set_b = zeros, high_accuracy::Bool=false)
+    if initW != nothing
+        if initb != nothing
+            return Dense{typeof(initW), typeof(initb), typeof(σ)}(initW, initb, σ)
+        else
+            return Dense(initW, σ)
+        end
+    else
+        if initb != nothing
+            w = dense_w(io..., set_w)
+            return Dense{typeof(w), typeof(initb), typeof(σ)}(w, initb, σ)
+        end
+    end
+    w = dense_w(io..., set_w)
+    Dense(w, σ)
 end
 
 trainable(D::Dense) = D.w, D.b
@@ -116,7 +127,7 @@ julia> F(rand(10, 10, 2, 5)) |> size
 (1000, )
 ```
 """
-mutable struct Flatten <: NParam
+mutable struct Flatten
     csize::Tuple
     function Flatten()
         return new(())
@@ -150,7 +161,7 @@ julia> D(rand(10))
  1.2794087133638332
 ```
 """
-struct Dropout <: NParam
+struct Dropout
     p::Float64
     function Dropout(p)
         if 0<=p<=1
@@ -200,7 +211,7 @@ Layer1 : Dense(IO:10 => 5, σ:relu)
 Layer2 : Dense(IO:5 => 1, σ:relu)
 ```
 """
-function add_layer!(model::NetWork, obj::T) where T <: Layer
+function add_layer!(model::NetWork, obj)
     l = length(model.net)
     model.net[l+1] = obj
 end

@@ -2,7 +2,8 @@ ACTIVATIONS = [
     :line, :σ, :hardσ, :hardtanh, :relu,
     :leakyrelu, :relu6, :rrelu, :elu, :gelu, :swish, :selu,
     :celu, :softplus, :softsign, :logσ, :logcosh,
-    :mish, :tanhshrink, :softshrink, :trelu, :lisht 
+    :mish, :tanhshrink, :softshrink, :trelu, :lisht,
+    :gaussian, :GCU, :SQU, :NCU, :SSU, :DSU
 ]
 for f in ACTIVATIONS
     @eval export $(f)
@@ -15,7 +16,7 @@ Linear function. This is the expression:
 line(x) = x
 ```
 """
-@inline line(x) = x
+line(x) = x
 
 @doc raw"""
     σ(x)
@@ -24,7 +25,7 @@ Standard sigmoid activation function. Also, this function can be called with `σ
 \sigma(x) = \frac{1}{1+e^{-x}}
 ```
 """
-@inline function sigmoid(x)
+function sigmoid(x)
     t = exp(-abs(x))
     return (x>=0) ? inv(1 + t) : t / (t + 1)
 end
@@ -43,7 +44,7 @@ hardsigmoid(x) = \left\{
 \right.
 ```
 """
-@inline hardsigmoid(x) = max(0, min(1, (x + 2.5) / 6))
+hardsigmoid(x) = max(0, min(1, (x + 2.5) / 6))
 const hardσ = hardsigmoid
 
 @doc raw"""
@@ -53,7 +54,7 @@ This is the expression:
 lisht(x) = x\tanh(x)
 ```
 """
-@inline lisht(x) = x*tanh(x)
+lisht(x) = x*tanh(x)
 
 @doc raw"""
     relu(x) = max(0, x)
@@ -67,7 +68,7 @@ x & (x \geq 0) \\
 \right.
 ```
 """
-@inline relu(x) = max(0, x)
+relu(x) = max(0, x)
 
 @doc raw"""
     leakyrelu(x; α=0.01) = (x>0) ? x : α*x
@@ -81,7 +82,7 @@ x & (x \geq 0)
 \right.
 ```
 """
-@inline leakyrelu(x; α=0.01) = max(x, α*x)
+leakyrelu(x; α=0.01) = max(x, α*x)
 
 @doc raw"""
     rrelu(min, max)
@@ -98,7 +99,7 @@ struct rrelu
     end
 end
 
-@inline (rrelu::rrelu)(x) = max(x, rrelu.α*x)
+(rrelu::rrelu)(x) = max(x, rrelu.α*x)
 
 @doc raw"""
     relu6(x)
@@ -113,7 +114,7 @@ x & (x \geq 0) \\
 \right.
 ```
 """
-@inline relu6(x) = min(6, max(0, x))
+relu6(x) = min(6, max(0, x))
 
 @doc raw"""
     elu(x, α=1)
@@ -127,7 +128,7 @@ x & (x \geq 0) \\
 \right.
 ```
 """
-@inline elu(x; α=1) = (x<0) ? (exp(x)-1)α : x
+elu(x; α=1) = (x<0) ? (exp(x)-1)α : x
 
 @doc raw"""
     celu(x; α=1)
@@ -142,7 +143,7 @@ x & (x \geq 0) \\
 \right.
 ```
 """
-@inline celu(x; α=1) = (x>=0) ? x : α*(exp(x/α)-1)
+celu(x; α=1) = (x>=0) ? x : α*(exp(x/α)-1)
 
 @doc raw"""
     gelu(x)
@@ -156,7 +157,7 @@ However, in the implementation, it is calculated with the following expression.
 gelu(x) = x\sigma(1.702x)
 ```
 """
-@inline gelu(x) = σ(1.702*x)x
+gelu(x) = σ(1.702*x)x
 
 @doc raw"""
     selu(x)
@@ -172,7 +173,7 @@ x & (x \geq 0) \\
 \right.
 ```
 """
-@inline function selu(x)
+function selu(x)
     λ = oftype(float(x), selu_λ)
     α = oftype(float(x), selu_α)
     return ((x > 0) ? x : (exp(x)-1)α)*λ
@@ -194,7 +195,7 @@ x & (x \gt 0) \\
 \right.
 ```
 """
-@inline trelu(x; θ=1) = (x<=θ) ? 0 : x
+trelu(x; θ=1) = (x<=θ) ? 0 : x
 
 @doc raw"""
     logσ(x)
@@ -204,7 +205,7 @@ logarithmic sigmoid function. This is the expression:
 logsigmoid(x) = \log(\sigma(x))
 ```
 """
-@inline logsigmoid(x) = log(σ(x))
+logsigmoid(x) = log(σ(x))
 const logσ = logsigmoid
 
 @doc raw"""
@@ -214,7 +215,7 @@ Log-Cosh function. This is the expression:
 logcosh(x) = \log(\cosh(x))
 ```
 """
-@inline logcosh(x) = log(cosh(x))
+logcosh(x) = log(cosh(x))
 
 @doc raw"""
     hardtanh(x)
@@ -229,7 +230,7 @@ x & (-1 \lt x \lt 1) \\
 \right.
 ```
 """
-@inline hardtanh(x) = min(1, max(-1, x))
+hardtanh(x) = min(1, max(-1, x))
 
 @doc raw"""
     tanhshrink(x)
@@ -238,7 +239,7 @@ Shrink tanh function. This is the expression:
 tanhshrink(x) = 1-\tanh(x)
 ```
 """
-@inline tanhshrink(x) = 1-tanh(x)
+tanhshrink(x) = 1-tanh(x)
 
 @doc raw"""
     softshrink(x; λ=0.5)
@@ -254,7 +255,7 @@ x+\lambda & (x \lt -\lambda) \\
 \right.
 ```
 """
-@inline softshrink(x; λ=0.5) = min(x+λ, max(x-λ, 0))
+softshrink(x; λ=0.5) = min(x+λ, max(x-λ, 0))
 
 @doc raw"""
     softsign(x) = x / (1+abs(x))
@@ -263,7 +264,7 @@ The softsign activation function. This is the expression:
 softsign(x) = \frac{x}{1+|x|}
 ```
 """
-@inline softsign(x) = x / (1 + abs(x))
+softsign(x) = x / (1 + abs(x))
 
 @doc raw"""
     softplus(x) = log(1 + exp(x))
@@ -272,7 +273,7 @@ the softplus activation function. This is the expression:
 softplus(x) = \ln(1+e^x)
 ```
 """
-@inline softplus(x) = log(1 + exp(x))
+softplus(x) = log(1 + exp(x))
 
 @doc raw"""
     mish(x) = x * tanh(softplus(x))
@@ -282,7 +283,7 @@ softplus(x) = \ln(1+e^x) \\
 mish(x) = x\tanh(softplus(x))
 ```
 """
-@inline mish(x) = x * tanh(softplus(x))
+mish(x) = x * tanh(softplus(x))
 
 @doc raw"""
     swish(x; β=1)
@@ -292,4 +293,58 @@ The swish function. This is the expression:
 swish(x) = x\sigma(\beta x)
 ```
 """
-@inline swish(x; β=1) = x * σ(β*x)
+swish(x; β=1) = x * σ(β*x)
+
+@doc raw"""
+    gaussian(x)
+The Gauss Function. This is the expression:
+```math
+Gaussian(x) = e^{-x^{2}}
+```
+"""
+gaussian(x) = exp(-x^2)
+
+@doc raw"""
+    GCU(x)
+Growing Cosine Unit. This is the expression:
+```math
+GCU(x) = x\cos(x)
+```
+"""
+GCU(x) = x*cos(x)
+
+@doc raw"""
+    SQU(x)
+Shifted Quadratic Unit. SQU is a biologically inspired activation that enables single neurons to learn the XOR function. This is the expression:
+```math
+SQU(x) = x^{2}+x
+```
+"""
+SQU(x) = x^2+x
+
+@doc raw"""
+    NCU(x)
+Non-Monotonic Cubic Unit. This is the expression:
+```math
+NCU(x) = x-x^{3}
+```
+"""
+NCU(x) = x-x^3
+
+@doc raw"""
+    SSU(x)
+Shifted Sinc Unit. This is the expression:
+```math
+SSU(x) = \pi \sinc(x-\pi)
+```
+"""
+SSU(x) = pi*sinc(x-pi)
+
+@doc raw"""
+    DSU(x)
+Decaying Sine Unit. This is the expression:
+```math
+DSU(x) = \frac{\pi}{2}(sinc(x-\pi)-sinc(x+\pi))
+```
+"""
+DSU(x) = (pi/2)*(sinc(x-pi)-sinc(x+pi))

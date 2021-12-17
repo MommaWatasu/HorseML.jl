@@ -10,13 +10,12 @@ NetWork
 ## Layers
 
 ```@docs
-Conv
-
 Dense
-
+Conv
 Dropout
-
 Flatten
+MaxPool
+MeanPool
 ```
 ## Activations
 ```@docs
@@ -41,16 +40,19 @@ tanhshrink
 softshrink
 trelu
 lisht
+gaussian
+GCU
+SQU
+NCU
+SSU
+DSU
 ```
 
 ## Optimizers
 
 ```@docs
 Descent
-
 Momentum
-
 AdaGrad
-
 Adam
 ```
