@@ -5,8 +5,8 @@ mutable struct ProgressIO
     o::IO
     function ProgressIO()
         old_stdout = stdout
-        I = open("progress_out.txt", "r")
-        O = open("progress_out.txt", "w")
+        O = open(".progress_out.txt", "w")
+        I = open(".progress_out.txt", "r")
         new(0, old_stdout, I, O)
     end
 end
@@ -23,9 +23,9 @@ function end_of_progress(PO::ProgressIO)
     redirect_stdout(PO.default)
     close(PO.o)
     try
-        rm("progress_out.txt")
+        rm(".progress_out.txt")
     catch e
-        throw(SystemError("couldn't remove `./progress_out.txt`!"))
+        throw(SystemError("couldn't remove `.progress_out.txt`!"))
     end
 end
 
