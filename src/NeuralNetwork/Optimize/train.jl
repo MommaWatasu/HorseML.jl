@@ -27,23 +27,3 @@ function train!(N, loss, data, opt)
         end
     end
 end
-
-"""
-    @epochs n ex
-This macro cruns `ex` `n` times. Basically this is useful for learning NeuralNetwork.
-
-# Example
-julia> a = 1
-
-julia> @epochs 1000 a+=1
-progress:1000/1000
-julia>a
-1001
-"""
-macro epochs(n, ex)
-    :(for i in 1 : $(esc(n))
-        progress = "progress:"*string(i)*"/"*string($(esc(n)))*"\r"
-        print(progress)
-        $(esc(ex))
-    end)
-end

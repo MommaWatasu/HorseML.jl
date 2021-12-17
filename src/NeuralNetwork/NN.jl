@@ -9,6 +9,7 @@ export NetWork, Dense, Conv, Flatten, Dropout, MaxPool, add_layer!, train!, @epo
 
 include("utils.jl")
 include("activations.jl")
+include("progress.jl")
 include("Layers/Network.jl")
 include("Optimize/train.jl")
 
