@@ -57,10 +57,10 @@ function Base.show(io::IO, N::NetWork)
 end
 
 """
-    Dense(in=>out, σ; set_w = "Xavier", set_b = zeros)
+    Dense(in=>out, σ; set_w = "Xavier", set_b = zeros, high_accuracy=false)
 Crate a traditinal `Dense` layer, whose forward propagation is given by:
-    y = σ.(W * x .+ b)
-The input of `x` should be a Vactor of length `in`, (Sorry for you can't learn using batch. I'll implement)
+    σ.(muladd(W, X, b))
+The input of `x` should be a Vector of length `in`, (Sorry for you can't learn using batch. I'll implement)
 
 # Example
 ```jldoctest
@@ -113,6 +113,63 @@ function (D::Dense)(X::AbstractVecOrMat)
 end
 
 (D::Dense)(x::AbstractArray) = reshape(D(reshape(x, size(x, 1), :)), :, size(x)[2:end]...)
+
+"""
+    Denseσ(in=>out, σ; set_w = "Xavier", set_b = zeros, high_accuracy=false)
+Dense layer which you can learn the parametes of the activation function. The implementation perfectly matches Dense layer.
+It is assumued that the activation function will be passed as a structure, and the parameters to be learned must be in the `w` field.
+
+# Example
+```jldoctest
+julia> D = Denseσ(5=>2, relu)
+Denseσ(IO:5=>2, σ:relu)
+
+julia> D(rand(Float64, 5)) |> size
+(2,)
+```
+"""
+struct Denseσ
+    w::W
+    b::B
+    σ::F
+    function Denseσ(W::M, σ::F) where {M<:AbstractMatrix, F}
+        b = create_bias(W, size(W, 1))
+        new{M, typeof(b), F}(W, b, σ)
+    end
+end
+
+function Denseσ(io::Pair{<:Integer, <:Integer}, σ;
+        initW=nothing, initb=nothing, set_w = "Xavier", set_b = zeros, high_accuracy::Bool=false)
+    if initW != nothing
+        if initb != nothing
+            return Denseσ{typeof(initW), typeof(initb), typeof(σ)}(initW, initb, σ)
+        else
+            return Denseσ(initW, σ)
+        end
+    else
+        if initb != nothing
+            w = dense_w(io..., set_w)
+            return Denseσ{typeof(w), typeof(initb), typeof(σ)}(w, initb, σ)
+        end
+    end
+    w = dense_w(io..., set_w)
+    Denseσ(w, σ)
+end
+
+trainable(D::Denseσ) = D.w, D.b, D.σ.w
+
+function Base.show(io::IO, D::Denseσ)
+    o, i = size(D.w)
+    σ = D.σ
+    print("Denseσ(IO:$i => $o, σ:$σ)")
+end
+
+function (D::Denseσ)(X::AbstractVecOrMat)
+    W, b, σ = D.w, D.b, D.σ
+    σ.(muladd(W, X, b))
+end
+
+(D::Denseσ)(x::AbstractArray) = reshape(D(reshape(x, size(x, 1), :)), :, size(x)[2:end]...)
 
 """
     Flatten()

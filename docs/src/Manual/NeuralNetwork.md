@@ -11,6 +11,7 @@ NetWork
 
 ```@docs
 Dense
+Denseσ
 Conv
 Dropout
 Flatten
