@@ -128,7 +128,7 @@ julia> D(rand(Float64, 5)) |> size
 (2,)
 ```
 """
-struct Denseσ
+struct Denseσ{W, B, F}
     w::W
     b::B
     σ::F
