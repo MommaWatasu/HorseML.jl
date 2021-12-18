@@ -4,6 +4,7 @@ using HorseML.NeuralNetwork
     #Test for utils
     @test_nowarn Dense(10=>5, relu, set_w="He")
     @test_nowarn Dense(10=>5, relu, set_w=rand)
+    @test_nowarn Dense(10=>5, relu, high_accuracy=true)
     init_w = Float32.(randn((5, 10)) ./ sqrt(10))
     init_b = Float32.(fill!(similar(init_w, size(init_w, 1)), 0))
     for layer in [Dense, Denseσ]
@@ -14,6 +15,7 @@ using HorseML.NeuralNetwork
     @test_nowarn Conv((2, 2), 2=>1, relu, set_w="He")
     @test_throws ArgumentError Conv((2, 2), 2=>1, relu, set_w=rand)
     @test_nowarn Conv((2, 2), 2=>1, relu, padding=KeepSize())
+    @test_nowarn Conv((2, 2), 2=>1, relu, padding=KeepSize(), high_accuracy=true)
     @test_throws ArgumentError Dropout(-0.2)
     
     data = [(rand(Float64, 10), rand(Float64)) for i in 1 : 10]

@@ -12,7 +12,7 @@ using HorseML.Regression
     #Linear Regression
     @testset "Linear Regression" begin
         model = LinearRegression()
-        @test_throws DimensionMismatch Regression.fit!(model, x, t')
+        @test_throws DimensionMismatch Regression.fit!(model, x', t)
         @test_nowarn Regression.fit!(model, x, t)
         @test size(model(x)) == size(t)
     end

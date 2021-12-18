@@ -11,6 +11,7 @@ import DataFrames
     #The test for Decision Tree
     model = DecisionTree()
     @test_nowarn Tree.fit!(model, x, t)
+    @test_throws DimensionMismatch Tree.fit!(model, x', t)
     @test_nowarn Tree.predict(model, x)
     @test_nowarn MV("test.dot", model)
     
@@ -29,6 +30,7 @@ import DataFrames
     #The test for Logistic Regression
     model = Logistic(alpha = 0.1)
     @test_nowarn Classification.fit!(model, x, t)
+    @test_throws DimensionMismatch Classification.fit!(model, x', t)
     @test_nowarn Classification.predict(model, x)
     
     #The test for Support Vector machine Classification(One-Vs-Rest)
