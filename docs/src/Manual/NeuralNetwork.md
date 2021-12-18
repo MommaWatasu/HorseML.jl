@@ -25,8 +25,9 @@ hardσ
 hardtanh
 relu
 leakyrelu
-relu6
 rrelu
+prelu
+relu6
 elu
 gelu
 swish

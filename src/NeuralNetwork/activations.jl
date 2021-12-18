@@ -1,6 +1,6 @@
 ACTIVATIONS = [
     :line, :σ, :hardσ, :hardtanh, :relu,
-    :leakyrelu, :relu6, :rrelu, :elu, :gelu, :swish, :selu,
+    :leakyrelu, :relu6, :rrelu, :prelu, :elu, :gelu, :swish, :selu,
     :celu, :softplus, :softsign, :logσ, :logcosh,
     :mish, :tanhshrink, :softshrink, :trelu, :lisht,
     :gaussian, :GCU, :SQU, :NCU, :SSU, :DSU
@@ -82,24 +82,35 @@ x & (x \geq 0)
 \right.
 ```
 """
-leakyrelu(x; α=0.01) = max(x, α*x)
+leakyrelu(x; α=0.01f0) = max(x, α*x)
 
 @doc raw"""
     rrelu(min, max)
-Randomized Rectified Linear Unit. The expression is the as [`leakyrelu`](@ref). but `α` is a random number between `min` and `max`.
+Randomized Rectified Linear Unit. The expression is the as [`leakyrelu`](@ref), but `α` is a random number between `min` and `max`.
 Also, since this function is defined as a structure, use it as follows:
 ```
 Dense(10=>5, rrelu(0.001, 0.1))
 ```
 """
 struct rrelu
-    α::Float64
+    α::Union{Float64, Float32}
     function rrelu(min::Float64, max::Float64)
         new(round(rand()*(max-min+1))+min)
     end
 end
 
 (rrelu::rrelu)(x) = max(x, rrelu.α*x)
+
+@doc raw"""
+    prelu(; α=0.01)
+Parametric Ractified LinearUnit. The expression is the as [`leakyrelu`](@ref), but `α` is determined by learning. Also, when using this function, use [`Denseσ`](@ref) instead of [`Dense`](@ref).
+"""
+struct prelu
+    α::Union{Float64, Float32}
+    prelu(; α=0.01) = new(α)
+end
+
+(prelu::prelu)(x) = max(x, prelu.α*x)
 
 @doc raw"""
     relu6(x)
