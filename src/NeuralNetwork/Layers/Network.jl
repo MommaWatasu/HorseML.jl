@@ -75,10 +75,11 @@ struct Dense{W, B, F}
     w::W
     b::B
     σ::F
-    function Dense(W::M, σ::F) where {M<:AbstractMatrix, F}
-        b = create_bias(W, size(W, 1))
-        new{M, typeof(b), F}(W, b, σ)
-    end
+end
+
+function Dense(W::M, σ::F) where {M<:AbstractMatrix, F}
+    b = create_bias(W, size(W, 1))
+    Dense{M, typeof(b), F}(W, b, σ)
 end
 
 function Dense(io::Pair{<:Integer, <:Integer}, σ;
@@ -88,11 +89,6 @@ function Dense(io::Pair{<:Integer, <:Integer}, σ;
             return Dense{typeof(initW), typeof(initb), typeof(σ)}(initW, initb, σ)
         else
             return Dense(initW, σ)
-        end
-    else
-        if initb != nothing
-            w = dense_w(io..., set_w)
-            return Dense{typeof(w), typeof(initb), typeof(σ)}(w, initb, σ)
         end
     end
     w = dense_w(io..., set_w)
@@ -132,10 +128,11 @@ struct Denseσ{W, B, F}
     w::W
     b::B
     σ::F
-    function Denseσ(W::M, σ::F) where {M<:AbstractMatrix, F}
-        b = create_bias(W, size(W, 1))
-        new{M, typeof(b), F}(W, b, σ)
-    end
+end
+
+function Denseσ(W::M, σ::F) where {M<:AbstractMatrix, F}
+    b = create_bias(W, size(W, 1))
+    Dense{M, typeof(b), F}(W, b, σ)
 end
 
 function Denseσ(io::Pair{<:Integer, <:Integer}, σ;
@@ -145,11 +142,6 @@ function Denseσ(io::Pair{<:Integer, <:Integer}, σ;
             return Denseσ{typeof(initW), typeof(initb), typeof(σ)}(initW, initb, σ)
         else
             return Denseσ(initW, σ)
-        end
-    else
-        if initb != nothing
-            w = dense_w(io..., set_w)
-            return Denseσ{typeof(w), typeof(initb), typeof(σ)}(w, initb, σ)
         end
     end
     w = dense_w(io..., set_w)
@@ -224,7 +216,7 @@ struct Dropout
         if 0<=p<=1
             new(p)
         else
-            throw(ArhumentError("p must be between 0 and 1!"))
+            throw(ArgumentError("p must be between 0 and 1!"))
         end
     end
 end
