@@ -43,38 +43,35 @@ julia> model(x)
 mutable struct Lasso
     w::Array{Float64, 1}
     α::Float64
-    tol::Float64
-    mi::Int64
-    Lasso(; alpha = 0.1, tol = 1e-4, mi = 1e+8) = new(Array{Float64}(undef, 0), alpha, tol, mi)
+    max::Int64
+    mine::Float64
+    Lasso(; alpha = 0.1, max = 1e+8, mine = 1e-4) = new(Array{Float64}(undef, 0), alpha, max, mine)
 end
 
-sfvf(x, y) = sign(x) * max(abs(x) - y, 0)
+soft_threshold(y, α) = sign.(y) .* max.(abs.(y) .- α, 0)
+
+supermum_eigen(x) = maximum(sum(abs.(x), dims=1))
 
 function fit!(model::Lasso, x, t)
-    function update!(x, t, w, α)
-        n, d = size(x)
-        w[1] = mean(t - x' * w[2:end])
-        wvec = fill!(Array{Float64}(undef, d), w[1])
-        for k in 1 : n
-            ww = w[2:end]
-            ww[k] = 0
-            q = (t - wvec - x' * ww) ⋅ x[k, :]
-            r = x[k, :] ⋅ x[k, :]
-            w[k+1] = sfvf(q / r, α)
+    coverge(x, mine) = @. abs(x) < mine
+    function update!(w, x, t, α, rho)
+        res = t - x * w
+        return soft_threshold(w + (x' * res) / rho, α / rho)
+    end
+    x = expand(x)
+    α = model.α * size(x, 1)
+    w = zeros(size(x, 2))
+    rho = supermum_eigen(x' * x)
+    for _ in 1 : model.max
+        w_new = update!(w, x, t, α, rho)
+        if coverge.(w_new - w, model.mine) == trues(size(w)...)
+            model.w = w_new
+            return
         end
+        w = w_new
     end
-    α, tol, mi = model.α, model.tol, model.mi
-    check_size(x, t)
-    if ndims(x) == 1 x = x[:, :] end
-    w = zeros(size(x, 1) + 1)
-    e = 0.0
-    for _ in 1 : mi
-        eb = e
-        update!(x, t, w, α)
-        e = sum(abs.(w)) / length(w)
-        abs(e - eb) <= tol && break
-    end
-    model.w = w[end:-1:1]
+    @warn "Not Converged!"
+    model.w = w
 end
 
-(model::Lasso)(x) = expand(x)' * model.w
+(model::Lasso)(x) = expand(x) * model.w
