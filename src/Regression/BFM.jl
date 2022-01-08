@@ -14,11 +14,11 @@ julia> make_design_matrix(x, dims = 2) |> size
 ```
 """
 function make_design_matrix(x; dims = 2)
-    n_features, n_datas = size(x)
+    n_datas, n_features = size(x)
     out_features = num_conbination(n_features, dims)
-    y = Array{Float64}(undef, out_features, n_datas)
+    y = Array{Float64}(undef, n_datas, out_features)
     current = 1
-    y[current : current+n_features-1, :] = x
+    y[:, current : current+n_features-1] = x
     index = collect(current : current+n_features-1)
     current += n_features
     push!(index, current)
@@ -30,7 +30,7 @@ function make_design_matrix(x; dims = 2)
             push!(new, current)
             next= current + stop - start
             next <= current && break
-            @. y[current : next-1, :] = y[start:stop-1, :] * x[feature_idx, :]'
+            @. y[:, current : next-1] = y[:, start:stop-1] * x[:, feature_idx]
             current = next
         end
         push!(new, current)

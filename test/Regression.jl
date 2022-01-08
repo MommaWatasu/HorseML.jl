@@ -7,7 +7,7 @@ using HorseML.Regression
     x = 5 .+ 25 .* rand(20)
     t = 170 .- 108 .* exp.(-0.2 .* x) .+ 4 .* rand(20)
     x1 = 23 .* (t ./ 100).^2 .+ 2 .* rand(20)
-    x = hcat(x, x1)'
+    x = hcat(x, x1)
 
     #Linear Regression
     @testset "Linear Regression" begin

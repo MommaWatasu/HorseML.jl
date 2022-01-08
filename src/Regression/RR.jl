@@ -46,9 +46,9 @@ end
 function fit!(model::Ridge, x, t)
     check_size(x, t)
     x = expand(x)
-    n = size(x, 1)
+    n = size(x, 2)
     _I = Matrix{Float64}(I, n, n)
-    model.w = inv(x * x' .+ model.α * _I) * x * t
+    model.w = inv(x' * x .+ model.α * _I) * x' * t
 end
 
-(model::Ridge)(x) = expand(x)' * model.w
+(model::Ridge)(x) = expand(x) * model.w

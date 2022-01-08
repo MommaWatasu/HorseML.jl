@@ -71,12 +71,12 @@ end
 
 """
     fit!(model, x, t)
-`x` must be the number of features in the first dimension and the second dimension must be the number of data.
+`x` must be the number of data in the first dimension and the number of feature in the second dimension.
 """
 function fit!(model::LinearRegression, x, t)
     check_size(x, t)
     x = expand(x)
-    model.w = inv(x * x') * x * t
+    model.w = inv(x' * x) * x' * t
 end
 
-(model::LinearRegression)(x) = expand(x)' * model.w
+(model::LinearRegression)(x) = expand(x) * model.w
