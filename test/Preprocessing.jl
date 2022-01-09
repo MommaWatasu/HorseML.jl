@@ -16,11 +16,11 @@ using DataFrames
         scaler = Standard()
         for (data, dim) in zip([x, xt], [1, 2])
             @test_nowarn Preprocessing.fit!(scaler, data, dims=dim)
-            @test_nowarn Preprocessing.transform!(scaler, data, dims=dim)
+            @test_nowarn Preprocessing.transform(scaler, data, dims=dim)
             x2 = fit_transform!(scaler, data, dims=dim)
-            @test inv_transform!(scaler, x2, dims=dim) == data
+            @test inv_transform(scaler, x2, dims=dim) ≈ Float32.(data)
         end
-        @test_throws DimensionMismatch Preprocessing.transform!(scaler, x1)
+        @test_throws DimensionMismatch Preprocessing.transform(scaler, x1)
         @test_nowarn fit_transform!(scaler, x1)
     end
 
@@ -29,11 +29,11 @@ using DataFrames
         scaler = MinMax()
         for (data, dim) in zip([x, xt], [1, 2])
             @test_nowarn Preprocessing.fit!(scaler, data, dims=dim)
-            @test_nowarn Preprocessing.transform!(scaler, data, dims=dim)
+            @test_nowarn Preprocessing.transform(scaler, data, dims=dim)
             x2 = fit_transform!(scaler, data, dims=dim)
-            @test inv_transform!(scaler, x2, dims=dim) == data
+            @test inv_transform(scaler, x2, dims=dim) ≈ Float32.(data)
         end
-        @test_throws DimensionMismatch Preprocessing.transform!(scaler, x1)
+        @test_throws DimensionMismatch Preprocessing.transform(scaler, x1)
         @test_nowarn x2 = fit_transform!(scaler, x1)
     end
     
@@ -41,11 +41,11 @@ using DataFrames
         scaler = Robust()
         for (data, dim) in zip([x, xt], [1, 2])
             @test_nowarn Preprocessing.fit!(scaler, data, dims=dim)
-            @test_nowarn Preprocessing.transform!(scaler, data, dims=dim)
+            @test_nowarn Preprocessing.transform(scaler, data, dims=dim)
             x2 = fit_transform!(scaler, data, dims=dim)
-            @test inv_transform!(scaler, x2, dims=dim) == data
+            @test inv_transform(scaler, x2, dims=dim) ≈ Float32.(data)
         end
-        @test_throws DimensionMismatch Preprocessing.transform!(scaler, x1)
+        @test_throws DimensionMismatch Preprocessing.transform(scaler, x1)
         @test_nowarn x2 = fit_transform!(scaler, x1)
     end
     

@@ -72,19 +72,20 @@ end
 
 ss(x, m, s) = @. (x-m)/s
 
-function transform!(scaler::Standard, x; dims=1)
+function transform(scaler::Standard, x; dims=1)
     p = scaler.p
     check_size(x, p, dims)
+    y = similar(x, Float32)
     if dims == 1
         for i in 1 : size(x, 2)
-            x[:, i] = ss(x[:, i], p[:, i]...)
+            y[:, i] = ss(x[:, i], p[:, i]...)
         end
     elseif dims == 2
         for i in 1 : size(x, 1)
-            x[i, :] = ss(x[i, :], p[:, i]...)
+            y[i, :] = ss(x[i, :], p[:, i]...)
         end
     end
-    return x
+    return y
 end
 
 """
@@ -93,7 +94,7 @@ fit scaler with `x`, and transform `x`.
 """
 function fit_transform!(scaler::Standard, x; dims=1)
     fit!(scaler, x, dims=dims)
-    transform!(scaler, x, dims=dims)
+    transform(scaler, x, dims=dims)
 end
 
 iss(x, m, s) = @. x*s+m
@@ -102,17 +103,18 @@ iss(x, m, s) = @. x*s+m
     inv_transform!(scaler, x; dims=1)
 Convert `x` in reverse.
 """
-function inv_transform!(scaler::Standard, x; dims=1)
+function inv_transform(scaler::Standard, x; dims=1)
     p = scaler.p
     check_size(x, p, dims)
+    y = similar(x, Float32)
     if dims == 1
         for i in 1 : size(x, 2)
-            x[:, i] = iss(x[:, i], p[:, i]...)
+            y[:, i] = iss(x[:, i], p[:, i]...)
         end
     elseif dims == 2
         for i in 1 : size(x, 1)
-            x[i, :] = iss(x[i, :], p[:, i]...)
+            y[i, :] = iss(x[i, :], p[:, i]...)
         end
     end
-    return x
+    return y
 end
