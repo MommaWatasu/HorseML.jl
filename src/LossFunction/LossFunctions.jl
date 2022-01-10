@@ -222,6 +222,15 @@ end
 #TODO:Consider whether to implement Calback liverer information volume
 
 for lossfunc in LOSSES
+    #For Matrix(size of the first dimension is 1) and Vector
+    @eval begin
+        function $(lossfunc)(y::AbstractMatrix{TY}, t::AbstractVector{TT}; reduction::String="mean") where {TY, TT}
+            if length(filter(!isone, size(y))) != 1
+                throw(DimensionMismatch("LossFunctions don't support for Matrix!"))
+            end
+            $(lossfunc)(vec(y), t, reduction=reduction)
+        end
+    end
     #For Vector and Number
     @eval begin
         function $(lossfunc)(y::AbstractVector{T}, t::Number; reduction::String="mean") where {T}
