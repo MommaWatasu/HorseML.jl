@@ -44,7 +44,7 @@ function forecast(model::Logistic, x)
     return softmax(x*w)
 end
 
-function predict(model::Logistic, x)
+function (model::Logistic)(x)
     w = model.w
     x = hcat(ones(size(x, 1), 1), x)
     s = softmax(x * w)

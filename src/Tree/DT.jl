@@ -112,7 +112,7 @@ function fit!(model::DecisionTree, x, t)
     model.tree = grow(x, t, model.classes, Inf, model.α, 1)
 end
 
-function predict(model::DecisionTree, x)
+function (model::DecisionTree)(x)
     function predict_one(x, tree)
         while tree["feature_id"] != nothing
             tree = (x[tree["feature_id"]] < tree["threshold"]) ? tree["left"] : tree["right"]

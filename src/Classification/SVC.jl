@@ -46,7 +46,7 @@ function fit!(model::SVC, x, t)
     model.classifiers = classifiers
 end
 
-function predict(model::SVC, x)
+function (model::SVC)(x)
     p = Array{Float64}(undef, 0, 0)
     for i in 1 : length(model.classifiers)
         if i == 1
