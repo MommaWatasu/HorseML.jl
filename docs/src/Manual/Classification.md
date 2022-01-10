@@ -1,7 +1,7 @@
 # Classification
 
 ## Models
-
+The data passed must be in the form of (`number of data`, `features`).
 ```@docs
 Classification.Logistic
 Classification.SVC
@@ -10,7 +10,7 @@ Classification.SVC
 # DecisionTree
 
 ## Models
-
+The data passed must be in the form of (`number of data`, `features`).
 ```@docs
 Tree.DecisionTree
 Tree.RandomForest

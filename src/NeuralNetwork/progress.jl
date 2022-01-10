@@ -41,6 +41,11 @@ end
 This macro cruns `ex` `n` times. Basically this is useful for learning NeuralNetwork.
 Even if there are any output during the progress, the progress bar won't disappear! It is always displayed in the bottom line of the output.
 When the process is finished, display `Complete!`.
+!!! note
+    The output during training is displayed, but in order to keep displaying the progress bar, it is displayed collectively after each process.(This may be improved in the future)
+
+!!! warning
+    This macro may not work on Windows (because Windows locks files)! Use `@ simple_epochs` instead!
 
 # Example
 ```jldoctest
@@ -81,6 +86,32 @@ macro epochs(n, ex)
     end
 end
 
+"""
+@simple_epochs n ex
+It's not much different from @epochs, but it doesn't have the ability to keep the progress bar displayed.
+
+# Example
+```jldoctest
+julia> function yes()
+           println("yes")
+           sleep(0.1)
+       end
+yes (generic function with 1 method)
+
+julia> @epochs 10 yes()
+yes
+yes
+yes
+yes
+yes
+yes
+yes
+yes
+yes
+yes
+  Complete!
+```
+"""
 macro simple_epochs(n, ex)
     quote
         for i in 1 : $(esc(n))

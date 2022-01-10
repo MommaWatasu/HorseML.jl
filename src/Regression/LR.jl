@@ -1,9 +1,9 @@
 """
     Lasso(; alpha = 0.1, tol = 1e-4, mi = 1e+8)
-Lasso Regression structure. eEach parameters are as follows:
+Lasso Regression structure. Each parameters are as follows:
 - `alpha` : leaarning rate.
-- `tol` : Allowable error.
-- `mi` : Maximum number of learning.
+- `mine` : Allowable error.
+- `max` : Maximum number of learning.
 
 # Example
 ```jldoctest regression

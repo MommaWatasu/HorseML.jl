@@ -1,7 +1,7 @@
 """
     Standard()
 Standard Scaler. This scaler scale data as:
-``\tilde{\boldsymbol{x}} = \\frac{x_{i}-\\mu}{\\sigma}``
+``\\tilde{\\boldsymbol{x}} = \\frac{x_{i}-\\mu}{\\sigma}``
 
 # Example
 ```jldoctest preprocessing
@@ -37,7 +37,7 @@ julia> fit!(scaler, x)
  19.0591   64.467
   6.95818   6.68467
 
-julia> transform!(scaler, x)
+julia> transform(scaler, x)
 20×2 Matrix{Float64}:
   0.0310374   0.44579
   0.0104337   0.218714
@@ -66,12 +66,20 @@ mutable struct Standard
     Standard() = new(Array{Float64}(undef, 0))
 end
 
+"""
+    fit!(scaler, x; dims=1)
+fit the scaler with `x`. `dims` is the dimension of the number of data.
+"""
 function fit!(scaler::Standard, x; dims=1)
     scaler.p = vcat(mean(x, dims=dims), std(x, dims=dims))
 end
 
 ss(x, m, s) = @. (x-m)/s
 
+"""
+    transform(scaler, x; dims=1)
+transform data with scaler. `dims` is the dimension of the number of data.
+"""
 function transform(scaler::Standard, x; dims=1)
     p = scaler.p
     check_size(x, p, dims)
@@ -90,7 +98,7 @@ end
 
 """
     fit_transform!(scaler, x; dims=1)
-fit scaler with `x`, and transform `x`.
+fit scaler with `x`, and transform `x`. `dims` is the dimension of the number of data.
 """
 function fit_transform!(scaler::Standard, x; dims=1)
     fit!(scaler, x, dims=dims)
@@ -100,8 +108,8 @@ end
 iss(x, m, s) = @. x*s+m
 
 """
-    inv_transform!(scaler, x; dims=1)
-Convert `x` in reverse.
+    inv_transform(scaler, x; dims=1)
+Convert `x` in reverse. `dims` is the dimension of the number of data.
 """
 function inv_transform(scaler::Standard, x; dims=1)
     p = scaler.p

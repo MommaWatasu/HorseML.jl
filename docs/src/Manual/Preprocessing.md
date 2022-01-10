@@ -18,6 +18,8 @@ Preprocessing.OneHotEncoder
 Preprocessing.Standard
 Preprocessing.MinMax
 Preprocessing.Robust
+Preprocessing.fit!
+Preprocessing.transform
 Preprocessing.fit_transform!
-Preprocessing.inv_transform!
+Preprocessing.inv_transform
 ```

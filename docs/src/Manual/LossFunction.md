@@ -5,7 +5,11 @@
 - `sum` : return the sum of the losses.
 - `mean` : return the mean of the losses.
 
-These functions must have both the input `y` and `t` as vectors.
+These functions take predictive values and teacher data as arguments, but only support the following types, respectively.
+- Vector and Vector
+- Vector and Number
+- Matrix(just added an axis to the vector) and Vector
+- Matrix(just added an axis to the vector) and Number
 
 ```@docs
 LossFunction.mse
