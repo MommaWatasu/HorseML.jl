@@ -13,7 +13,7 @@ julia> fit!(scaler, x)
   1.39855   0.954091
  -1.99789  -3.27656
 
-julia> transform!(scaler, x)
+julia> transform(scaler, x)
 20×2 Matrix{Float64}:
  0.597368  0.879853
  0.591301  0.826179

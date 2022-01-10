@@ -45,7 +45,7 @@ When the process is finished, display `Complete!`.
     The output during training is displayed, but in order to keep displaying the progress bar, it is displayed collectively after each process.(This may be improved in the future)
 
 !!! warning
-    This macro may not work on Windows (because Windows locks files)! Use `@ simple_epochs` instead!
+    This macro may not work on Windows (because Windows locks files)! Use [`@simple_epochs`](@ref) instead!
 
 # Example
 ```jldoctest
@@ -88,7 +88,7 @@ end
 
 """
 @simple_epochs n ex
-It's not much different from @epochs, but it doesn't have the ability to keep the progress bar displayed.
+It's not much different from `@epochs`, but it doesn't have the ability to keep the progress bar displayed.
 
 # Example
 ```jldoctest
