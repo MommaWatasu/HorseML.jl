@@ -10,7 +10,7 @@ HorseML provides an easy-to-use machine learning library
 LearningHorse can be installed using the Julia package manager.
 From the Julia REPL, type ] to enter the Pkg REPL mode and run.
 ```
-pkg> add LearningHorse
+pkg> add HorseML
 ```
 
 ## Index
