@@ -22,6 +22,7 @@ end
 function end_of_progress(PO::ProgressIO)
     redirect_stdout(PO.default)
     close(PO.o)
+    close(PO.i)
     try
         rm(".progress_out.txt")
     catch e

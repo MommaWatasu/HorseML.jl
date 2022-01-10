@@ -24,6 +24,7 @@ using HorseML.NeuralNetwork
     loss(x, y) = LossFunction.mse(NN(x), y)
     train!(NN, loss, data, opt)
     @test_nowarn @epochs 10 train!(NN, loss, data, opt)
+    @test_nowarn @simple_epochs 10 train!(NN, loss, data, opt)
     @test typeof(NN[1]) <: Dense
     println(NN)
     @test_nowarn NN(rand(10, 10))
