@@ -79,3 +79,15 @@ macro epochs(n, ex)
         println("\033[92m \033[1m Complete! \033[m")
     end
 end
+
+macro simple_epochs(n, ex)
+    quote
+        for i in 1 : $(esc(n))
+            progress = "progress:"*string(i)*"/"*string($(esc(n)))*"\r"
+            print(progress)
+            flush(stdout)
+            $(esc(ex))
+        end
+        println("\033[92m \033[1m Complete! \033[m")
+    end
+end
