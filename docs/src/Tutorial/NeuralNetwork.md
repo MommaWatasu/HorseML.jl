@@ -2,7 +2,7 @@
 Let's finally build the most powerful model, NeuralNetwork!
 
 ## Basic NetWork
-In anything, it's important to first learn the basics.　Let's create a networkconsisting only of [`Dense`](@ref) layer.
+In anything, it's important to first learn the basics. Let's create a networkconsisting only of [`Dense`](@ref) layer.
 ```
 using HorseML.Preprocessing
 using HorseML.NeuralNetwork
@@ -10,16 +10,16 @@ using HorseML.LossFunction
 
 data = Matrix(dataloader("iris"))
 DS = DataSplitter(150, test_size = 0.3)
+LE = LabelEncoder()
+OHE = OneHotEncoder()
 train_data, test_data = DS(data)
-train_x, train_t = train_data[:, 1:4], train_data[:, 5]
-train_data = zip(train_x, train_t)
-test_x, test_t = test_data[:, 1:4], test_data[:, 5]
+train_x, train_t = Float32.(train_data[:, 1:4]), OHE(LE(train_data[:, 5]))
+train_data = [(train_x[i, :], train_t[i, :]) for i in 1 : size(train_t, 1)]
 
-model = NetWork(Dense(4=>2, relu), Dense(2=>3, sigmoid))
-loss(x, y) = mse(model(x), y)
+N = NetWork(Dense(4=>2, relu), Dense(2=>3, σ))
+loss(x, y) = mse(N(x), y)
 opt = Adam()
-train!(model, loss, train_data, opt)
-loss(test_x, test_y)
+train!(N, loss, train_data, opt)
 ```
 I wrote it all at once, but I'm doing is preparing the data, then definig and training the model.
 
@@ -30,18 +30,16 @@ using HorseML.Preprocessing
 using HorseML.NeuralNetwork
 using HorseML.LossFunction
 
-train, test = Matrix(dataloader("MNIST"))
-train = Matrix(train)
-x, t = reshape(train[:, 2:end], :, 28, 28, 1, 1), train[:, 1]
-test_x, test_t = reshape(test_[:, 2:end], :, 28, 28, 1, 1), test_[:, 1]
-OHE = OneHotEncoder()
-t = OHE(t)
-data = [(x[i, :, :, :, :], t[i, :]) for i in 1 : 60000]
+train, test = Matrix.(dataloader("MNIST"))
+train_x, train_t = reshape(train[:, 2:end], :, 28, 28, 1, 1), Float32.(train[:, 1])
+test_x, test_t = reshape(test[:, 2:end], :, 28, 28, 1, 1), Float32.(test[:, 1])
+train_data = [(train_x[i, :, :, :, :], train_t[i, :]) for i in 1 : 60000]
+test_data = [(test_x[i, :, :, :, :], test_t[i, :]) for i in 1 : 10000]
 
-model = NetWork(Conv((3, 3), 1=>1, relu), MaxPool((2, 2)), Conv((2, 2), 1=>1, relu), MaxPool((2, 2)), Flatten(), Dense(36=>10, tanh))
-loss(x, y) = mse(model(x), y)
+N = NetWork(Conv((3, 3), 1=>1, relu), MaxPool((2, 2)), Conv((2, 2), 1=>1, relu), MaxPool((2, 2)), Flatten(), Dense(36=>10, tanh))
+loss(x, y) = mse(N(x), y)
 opt = Adam()
-@epochs 10 train!(model, loss, data, opt)
+@epochs 10 train!(N, loss, train_data, opt)
 ```
 
 ## Create your layers

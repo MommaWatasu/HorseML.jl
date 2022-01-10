@@ -21,3 +21,6 @@ From the Julia REPL, type ] to enter the Pkg REPL mode and run.
 ```
 pkg> add HorseML
 ```
+
+## About this Tutorial
+This tutorial is made as easy to understand as possible by demonstrating examples of almost functions of HorseML. The code used as an example basically works if you run it in one Jupyter Notebook for each chapter.

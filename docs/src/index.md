@@ -1,10 +1,10 @@
-# LearningHorse.jl
+# HorseML.jl
 
-LearningHorse provides an easy-to-use machine learning library
+HorseML provides an easy-to-use machine learning library
 
 ## Resources
-- [Documentation](https://mommawatasu.github.io/LearningHorse.jl/docs/)
-- [Source code](https://github.com/MommaWatasu/Learninghorse.jl)
+- [Documentation](https://mommawatasu.github.io/HorseML.jl/dev/)
+- [Source code](https://github.com/MommaWatasu/HorseML.jl)
 
 ## Installation
 LearningHorse can be installed using the Julia package manager.

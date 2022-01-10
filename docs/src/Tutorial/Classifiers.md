@@ -1,25 +1,25 @@
 # Classifiers
 
-## Encoders
-In order to convert label-like string data to teacher data that can be used by classifiers, you need to encode the data. The encoders can be used in the classification module.
-
-### Label Encoder
-First, convert string data to numeric data. At this time, the conversion rules for string data and numeric data are stored in the encoder. Therefore, after the prediction, you can see the prediction results by decoding with the same encoder. for more details, see [`LabelEncoder`](@ref).
+## data processing
+Prepare the data used in this chapter.
 ```
+#load and processing the data
 using HorseML.Preprocessing
-using HorseML.Classification
-using HorseML.Classification: fit!, predict
+data = Matrix(dataloader("iris"))
+x, t = data[:, 1:4], data[:, 5]
 
 LE = LabelEncoder()
-test_t = LE(test_t)#This data is splitted in the previous chapter.
-train_t = LE(train_t)
-```
+t = LE(t)
 
-### One-Hot Encoder
-Next, let's ocnvert the data into One-Hot formst for make learning easier. for more details, see [`OneHotEncoder`](@ref).
-```
+scaler = Standard()
+x = fit_transform!(scaler, x)
+
+DS = DataSplitter(150, test_size = 0.3)
+
+train_x, test_x = DS(x)
+train_t, test_t = DS(t)
+
 OHE = OneHotEncoder()
-test_t = OHE(test_t)
 train_t = OHE(train_t)
 ```
 
@@ -29,7 +29,7 @@ Let's create a classifier using the normalized Iris dataset. First of all, we wi
 model = Logistic()
 fit!(model, train_x, train_t)
 
-predict(model, test_x)
+model(test_x)
 ```
 
 ## SVC(Support Vector Machine Classifier)

@@ -5,7 +5,7 @@ First, let's try the simplest model, the linear regression model.
 The code is:
 ```
 using HorseML.Regression
-using HorseML.Regression: fit!, predict
+using HorseML.Regression: fit!
 
 #data
 x = 5 .+ 25 .* rand(20)
@@ -24,7 +24,7 @@ x = 5 .+ 25 .* rand(20)
 x1 = 23 .* (t ./ 100).^2 .+ 2 .* rand(20)
 test_data = hcat(x, x1)
 
-predict(model test_data)
+model(test_data)
 ```
 Congratulations! You was able to train your first model using HorseML and use it to predict it.
 
@@ -36,9 +36,6 @@ In many cases, the data is nonlinear. Let's use polunomial regression. With Hors
 
 The code of training is this:
 ```
-using HorseML.Regression
-using HorseML.Regression: fit!, predict
-
 #model
 model = LinearRegression()
 fit!(model, make_design_matrix(train_data), t)
@@ -47,7 +44,7 @@ Just pass the training data to `make_design_matrix`. Isn't it easy?
 
 predicting is easy too:
 ```
-predict(model, make_design_matrix(test_data))
+model(make_design_matrix(test_data))
 ```
 
 ### Ridge Regression, Lasso Regression
@@ -56,12 +53,12 @@ When building these models, you need to use different structures. But other than
 #Ridge Regression
 model = Ridge()
 
-fit!(model, make_design_matrix(train_data))
+fit!(model, make_design_matrix(train_data), t)
 
 #Lasso Regression
 model = Lasso()
 
-fit!(model, make_design_matrix(train_data))
+fit!(model, make_design_matrix(train_data), t)
 ```
 Predicting is the same as polynomial regression.
 
@@ -70,10 +67,14 @@ There's no point in just learning the model you made, you need to save it and lo
 HorseML itself doesn't implement this function, but it is very easy by using [`BSON.jl`](https://github.com/JuliaIO/BSON.jl).
 after learning:
 ```
+#add BSON
+using Pkg
+Pkg.add("BSON")
+
 using BSON
 using BSON: @save
 
-@save "/home/ubuntu/model.bson" model
+@save "/home/ubuntu/model.bson" model #change the save destination path according to the environment.
 ```
 and loading:
 ```

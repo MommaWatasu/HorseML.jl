@@ -19,10 +19,10 @@ makedocs(;
             "NeuralNetwork" => "Tutorial/NeuralNetwork.md"
         ],
         "Manual" => [
-            "Regression" => "Manual/Regression.md",
-            "Classification" => "Manual/Classification.md",
             "Preprocessing" => "Manual/Preprocessing.md",
             "LossFunction" => "Manual/LossFunction.md",
+            "Regression" => "Manual/Regression.md",
+            "Classification" => "Manual/Classification.md",
             "NeuralNetwork" => "Manual/NeuralNetwork.md",
         ]
     ]
