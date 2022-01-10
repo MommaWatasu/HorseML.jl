@@ -68,7 +68,7 @@ end
 function (model::RandomForest)(x)
     solution = Array{Any}(undef, model.n_trees, size(x, 1))
     for (tree, feature, i) in zip(model.forest, 1:size(model.using_feature, 1), 1:model.n_trees)
-        solution[i, :] = predict(tree, x[:, model.using_feature[feature, :]])
+        solution[i, :] = tree(x[:, model.using_feature[feature, :]])
     end
     predicts = Array{Any}(undef, size(x, 1))
     for i in 1:size(x, 1)
