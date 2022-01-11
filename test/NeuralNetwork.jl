@@ -28,14 +28,6 @@ using HorseML.NeuralNetwork
     @test typeof(NN[1]) <: Dense
     println(NN)
     @test_nowarn NN(rand(10, 10))
-
-    function train(NN, loss, data, opt)
-        train!(NN, loss, data, opt)
-        msg = "first layer: "*string(NN.net[1])
-        @log msg
-    end
-
-    @epochs 10 train(NN, loss, data, opt)
     
     #Test for activations
     ACTIVATIONS=[
