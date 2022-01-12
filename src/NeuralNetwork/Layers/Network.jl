@@ -60,7 +60,7 @@ end
     Dense(in=>out, σ; set_w = "Xavier", set_b = zeros, high_accuracy=false)
 Crate a traditinal `Dense` layer, whose forward propagation is given by:
     σ.(muladd(W, X, b))
-The input of `x` should be a Vector of length `in`, (Sorry for you can't learn using batch. I'll implement)
+The size of `x` must be `(in)` or `(in, batch)`.
 
 # Example
 ```jldoctest
@@ -124,7 +124,7 @@ julia> D(rand(Float64, 5)) |> size
 (2,)
 ```
 """
-struct Denseσ{W, B, F}
+struct Denseσ{W<:AbstractMatrix, B, F}
     w::W
     b::B
     σ::F
