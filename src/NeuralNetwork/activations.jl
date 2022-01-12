@@ -346,6 +346,7 @@ NCU(x) = x-x^3
     SSU(x)
 Shifted Sinc Unit. This is the expression:
 ```math
+\DeclareMathOperator{\sinc}{sinc}
 SSU(x) = \pi \sinc(x-\pi)
 ```
 """
