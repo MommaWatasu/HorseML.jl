@@ -18,7 +18,7 @@ end
 
 Descent(;η::Float64 = 0.1) = Descent(η)
 
-apply!(opt::Descent, x::Array, Δ::Array) = opt.eta .* Δ
+apply!(opt::Descent, x::AbstractArray, Δ::AbstractArray) = opt.eta .* Δ
 
 """
     Momentum(η=0.01, α=0.9, velocity)
@@ -39,7 +39,7 @@ end
 
 Momentum(η = 0.01, α = 0.9) = Momentum(η, α, Dict())
 
-function apply!(opt::Momentum, x::Array, Δ::Array)
+function apply!(opt::Momentum, x::AbstractArray, Δ::AbstractArray)
     η, α = opt.eta, opt.alpha
     v = get!(() -> zero(x), opt.velocity, x)::typeof(x) #get!() function returns a view.
     @. v = (α*v - η*Δ)
@@ -63,7 +63,7 @@ end
 
 AdaGrad(η = 0.01) = AdaGrad(η, Dict())
 
-function apply!(opt::AdaGrad, x::Array, Δ::Array)
+function apply!(opt::AdaGrad, x::AbstractArray, Δ::AbstractArray)
     η = opt.eta
     h = get!(() -> zero(x), opt.h, x)::typeof(x)
     @. h += Δ^2
@@ -90,7 +90,7 @@ end
 
 Adam(η = 0.01, β = (0.9, 0.99)) = Adam(η, β, Dict())
 
-function apply!(opt::Adam, x::Array, Δ::Array)
+function apply!(opt::Adam, x::AbstractArray, Δ::AbstractArray)
     η, β = opt.eta, opt.beta
     mt, vt , βp = get!(opt.recode, x) do
         (zero(x), zero(x), Float64[β[1], β[2]])

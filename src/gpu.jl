@@ -1,4 +1,5 @@
 using CUDA
+import Zygote
 using Base: issingletontype
 using .NeuralNetwork
 
@@ -6,6 +7,10 @@ using .NeuralNetwork
 
 isleaf(t::T) where {T}  = issingletontype(T), !isstructtype(T), false
 isleaf(t::AbstractArray{T}) where {T} = false, isprimitivetype(T), true
+
+adapt(x) = CUDA.cu(x)
+adapt(x::Zygote.FillArrays.AbstractFill) = CUDA.cu(collect(x))
+adapt(x::Zygote.OneElement) = CUDA.cu(collect(x))
 
 cpu(x::AbstractArray) = Array(x)
 
@@ -19,7 +24,7 @@ for processor in (:gpu, :cpu)
     @eval begin
         function $(processor)(obj::T) where {T}
             is_singleton, is_leaf, is_array = isleaf(obj)
-            is_leaf && return $((processor==:gpu) ? :cu : :cpu)(obj)
+            is_leaf && return $((processor==:gpu) ? :adapt : :cpu)(obj)
             if is_array
                 return array_obj(obj)
             elseif is_singleton
