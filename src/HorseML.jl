@@ -3,7 +3,7 @@ module HorseML
 using LinearAlgebra
 using Statistics
 
-export Regression, Classification, Preprocessing, LossFunction, Tree, NeuralNetwork
+export Regression, Classification, Preprocessing, LossFunction, Tree, NeuralNetwork, gpu, cpu
 
 include("utils.jl")
 include("./Regression/Regression.jl")
@@ -12,5 +12,6 @@ include("./Tree/Tree.jl")
 include("./NeuralNetwork/NN.jl")
 include("./Preprocessing/Preprocessing.jl")
 include("./LossFunction/LossFunctions.jl")
+include("gpu.jl")
 
 end
