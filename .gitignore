@@ -3,3 +3,4 @@
 *.jl.mem
 *.dot
 Manifest.toml
+.ipynb_checkpoints
