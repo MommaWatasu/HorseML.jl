@@ -1,5 +1,5 @@
 ACTIVATIONS = [
-    :line, :σ, :hardσ, :hardtanh, :relu,
+    :line, :σ, :sigmoid, :hardσ, :hardsigmoid, :hardtanh, :relu,
     :leakyrelu, :relu6, :rrelu, :prelu, :elu, :gelu, :swish, :selu,
     :celu, :softplus, :softsign, :logσ, :logcosh,
     :mish, :tanhshrink, :softshrink, :trelu, :lisht,
