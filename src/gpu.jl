@@ -51,24 +51,27 @@ for processor in (:gpu, :cpu)
             end
         end
     end
-    
-    @eval begin
-        function $(processor)(model::NetWork)
-            $(
-                if processor == :gpu
-                    check_use_cuda()
-                    if !use_cuda[]
-                        @warn "your computer doesn't have a GPU, or couldn't recognized. So a GPU isn't used."
-                        return model
-                    end
-                end    
-            )
-            N = NetWork()
-            n = length(model.net)
-            for i in 1 : n
-                add_layer!(N, $(processor)(model.net[i]))
-            end
-            return N
-        end
+end
+
+function gpu(model::NetWork)
+    check_use_cuda()
+    if use_cuda[]
+        @warn "your computer doesn't have a GPU, or couldn't recognized. So a GPU isn't used."
+        return model
     end
+    N = NetWork()
+    n = length(model.net)
+    for i in 1 : n
+        add_layer!(N, gpu(model.net[i]))
+    end
+    return N
+end
+
+function cpu(model::NetWork)
+    N = NetWork()
+    n = length(model.net)
+    for i in 1 : n
+        add_layer!(N, cpu(model.net[i]))
+    end
+    return N
 end
