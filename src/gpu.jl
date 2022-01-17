@@ -3,6 +3,22 @@ import Zygote
 using Base: issingletontype
 using .NeuralNetwork
 
+const use_cuda = Ref{Union{Nothing,Bool}}(nothing)
+
+function check_use_cuda()
+  if use_cuda[] === nothing
+    use_cuda[] = CUDA.functional()
+    if use_cuda[] && !CUDA.has_cudnn()
+      @warn "CUDA.jl found cuda, but did not find libcudnn. Some functionality will not be available."
+    end
+    if !(use_cuda[])
+      @info """The GPU function is being called but the GPU is not accessible. 
+               Defaulting back to the CPU. (No action is required if you want to run on the CPU).""" maxlog=1
+    end
+  end
+end
+Zygote.@nograd check_use_cuda
+
 @generated new_struct(DT, args...) = Expr(:call, nameof(DT), :(args...))
 
 isleaf(t::T) where {T}  = issingletontype(T), !isstructtype(T), false
@@ -38,6 +54,15 @@ for processor in (:gpu, :cpu)
     
     @eval begin
         function $(processor)(model::NetWork)
+            $(
+                if processor == :gpu
+                    check_use_cuda()
+                    if !use_cuda[]
+                        @warn "your computer doesn't have a GPU, or couldn't recognized. So a GPU isn't used."
+                        return model
+                    end
+                end    
+            )
             N = NetWork()
             n = length(model.net)
             for i in 1 : n
