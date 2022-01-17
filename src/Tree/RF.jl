@@ -5,7 +5,7 @@ function bootstrap(x, t, n_trees)
     bootstrapped_t = Array{Any}(undef, n_trees, length(t))
     using_feature = Array{Int}(undef, n_trees, n_features_forest)
     newaxis = [CartesianIndex()]
-    for i in 1 : n_trees
+    Threads.@threads for i in 1 : n_trees
         ind = rand(1:length(t), length(t))
         col = sample(1 : n_features, n_features_forest)
         k = x[ind, col]
@@ -55,7 +55,7 @@ function fit!(model::RandomForest, x, t)
     forest = Array{DecisionTree}(undef, model.n_trees)
     classes = Array{Array}(undef, model.n_trees)
     bootstrapped_x, bootstrapped_t, using_feature = bootstrap(x, t, model.n_trees)
-    for i in 1:model.n_trees
+    Threads.@threads for i in 1:model.n_trees
         tree = DecisionTree(alpha = model.α)
         fit!(tree, bootstrapped_x[:, :, i], bootstrapped_t[i, :])
         forest[i], classes[i] = tree, tree.classes

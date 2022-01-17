@@ -37,7 +37,7 @@ function fit!(model::SVC, x, t)
     c = size(t, 2)
     w = Array{Float64}(undef, 0, 0)
     classifiers = Array{Logistic}(undef, 0)
-    for i in 1 : c
+    Threads.@threads for i in 1 : c
         classifier = Logistic(alpha = alpha, ni = n_iter)
         OHE = OneHotEncoder()
         fit!(classifier, x, OHE(t[:, i]))
@@ -47,13 +47,9 @@ function fit!(model::SVC, x, t)
 end
 
 function (model::SVC)(x)
-    p = Array{Float64}(undef, 0, 0)
+    p = Array{Float64}(undef, size(x, 1), length(model.classifiers))
     for i in 1 : length(model.classifiers)
-        if i == 1
-            p = forecast(model.classifiers[i], x)[:, 2]
-        else
-            p = hcat(p, forecast(model.classifiers[i], x)[:, 2])
-        end
+        p[:, i] = forecast(model.classifiers[i], x)[:, 2]
     end
     return [findfirst(p[i, :] .== maximum(p[i, :])) for i in 1:size(p, 1)]
 end

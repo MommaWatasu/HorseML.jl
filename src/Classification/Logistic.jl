@@ -32,7 +32,7 @@ function fit!(model::Logistic, x, t)
     check_size(x, t)
     x = hcat(ones(size(x, 1), 1), x)
     w = ones(size(x, 2), size(t, 2))
-    for n in 1 : n_iter
+    Threads.@threads for n in 1 : n_iter
         w -= alpha * ceed(x, w, t)
     end
     model.w = w
