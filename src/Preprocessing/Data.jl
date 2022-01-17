@@ -61,6 +61,67 @@ function dataloader(name; header = true, dir = "HorseMLdatasets")
 end
 
 """
+    databuilder(x, y; batches=1)
+`x` is the feature value, `y` is the teacher data, and `bacthes` is the batch size.
+This function formats and returns the data used for the neural network(however, `x` and` y` must be Arrays or DataFrames, so please use this function  after encoding, normalization, etc.).
+
+# Example
+```jldoctest
+julia> data = dataloader("iris");
+
+julia> LE, OHE = LabelEncoder(), OneHotEncoder()
+(LabelEncoder(Dict{Any, Any}()), OneHotEncoder())
+
+julia> x, y = data[:, Not(:variety)], OHE(LE(data[:, :variety]));
+
+julia> databuilder(x, y)
+150-element Vector{Tuple{Matrix{Float64}, Matrix{Int64}}}:
+ ([5.1; 3.5; 1.4; 0.2;;], [1; 0; 0;;])
+ ([4.9; 3.0; 1.4; 0.2;;], [1; 0; 0;;])
+ ([4.7; 3.2; 1.3; 0.2;;], [1; 0; 0;;])
+ ([4.6; 3.1; 1.5; 0.2;;], [1; 0; 0;;])
+ ([5.0; 3.6; 1.4; 0.2;;], [1; 0; 0;;])
+ ([5.4; 3.9; 1.7; 0.4;;], [1; 0; 0;;])
+ ([4.6; 3.4; 1.4; 0.3;;], [1; 0; 0;;])
+ ([5.0; 3.4; 1.5; 0.2;;], [1; 0; 0;;])
+ ([4.4; 2.9; 1.4; 0.2;;], [1; 0; 0;;])
+ ([4.9; 3.1; 1.5; 0.1;;], [1; 0; 0;;])
+ ([5.4; 3.7; 1.5; 0.2;;], [1; 0; 0;;])
+ ([4.8; 3.4; 1.6; 0.2;;], [1; 0; 0;;])
+ ([4.8; 3.0; 1.4; 0.1;;], [1; 0; 0;;])
+ ⋮
+ ([6.0; 3.0; 4.8; 1.8;;], [0; 0; 1;;])
+ ([6.9; 3.1; 5.4; 2.1;;], [0; 0; 1;;])
+ ([6.7; 3.1; 5.6; 2.4;;], [0; 0; 1;;])
+ ([6.9; 3.1; 5.1; 2.3;;], [0; 0; 1;;])
+ ([5.8; 2.7; 5.1; 1.9;;], [0; 0; 1;;])
+ ([6.8; 3.2; 5.9; 2.3;;], [0; 0; 1;;])
+ ([6.7; 3.3; 5.7; 2.5;;], [0; 0; 1;;])
+ ([6.7; 3.0; 5.2; 2.3;;], [0; 0; 1;;])
+ ([6.3; 2.5; 5.0; 1.9;;], [0; 0; 1;;])
+ ([6.5; 3.0; 5.2; 2.0;;], [0; 0; 1;;])
+ ([6.2; 3.4; 5.4; 2.3;;], [0; 0; 1;;])
+ ([5.9; 3.0; 5.1; 1.8;;], [0; 0; 1;;])
+```
+"""
+function databuilder(x::Matrix{TX}, y::Matrix{TY}; batches = 1) where {TX, TY}
+    size(x, 1) % batches != 0 && @warn "the data size is not divisible by the batch size! some data will be omitted"
+    N = round(Int64, size(x, 1) / batches)
+    x, y = x', y'
+    data = Vector{Tuple{Matrix{TX}, Matrix{TY}}}(undef, N)
+    c = 1
+    for n in 1 : N
+        data[n] = (x[:, c:n*batches], y[:, c:n*batches])
+        c += batches
+    end
+    return data
+end
+
+databuilder(x::Matrix, y::Vector; batches = 1) = databuilder(x, y[:, :], batches = batches)
+databuilder(x::DataFrame, y; batches=1) = databuilder(Matrix(x), y, batches = batches)
+databuilder(x::DataFrame, y::DataFrame; batches=1) = databuilder(Matrix(x), Matrix(y), batches = batches)
+
+"""
     DataSplitter(ndata; test_size=nothing, train_size=nothing)
 Split the data into test data and training data. `ndata` is the number of the data, and you must specify either `test_size` or `train_size`. thease parameter can be proprtional or number of data.
 
