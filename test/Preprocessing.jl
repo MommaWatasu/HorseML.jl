@@ -53,12 +53,14 @@ using DataFrames
     @testset "Data Preprocessing" begin
         originstdin = stdin
         f = open("data_test.txt")
+        old_stdin = stdin
         redirect_stdin(f)
         @test_nowarn dataloader("MNIST")
         @test_nowarn dataloader("BostonHousing")
         @test_nowarn dataloader("iris")
         @test_throws ArgumentError dataloader("dammy.csv")
         close(f)
+        redirect_stdin(old_stdin)
     end
     
     @testset "Data Splitter" begin
@@ -82,8 +84,17 @@ using DataFrames
         @test LE(encoded_t, decode=true)==t
         OHE = OneHotEncoder()
         @test_nowarn OHE(encoded_t)
+        t = OHE(encoded_t)
         df = CSV.read("testdata.csv", DataFrame)
         df.sex = string.(df.sex)
         OHE(df, [:sex, :birth])
+    end
+    
+    @testset "DataBuld" begin
+        @test_nowarn databuilder(x, t)
+        t2 = CSV.read("testdata2.csv", DataFrame, header = false)
+        @test_nowarn databuilder(x, t2)
+        @test_nowarn databuilder(Matrix(x), Matrix(t2))
+        @test_nowarn databuilder(Matrix(x), Matrix(t2)[:, 1])
     end
 end
