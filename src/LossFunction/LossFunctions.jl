@@ -33,6 +33,7 @@ function mse(y::AbstractVector, t::AbstractVector; reduction::String="mean")
     end
 end
 mse(y::Number, t::Number) = (y-t)^2
+mse(y, t) = mean((y.-t).^2)
 
 @doc raw"""
     cee(y, t; reduction="mean")
@@ -53,7 +54,7 @@ function cee(y::AbstractVector, t::AbstractVector; reduction::String="mean")
         throw(ArgumentError("`reduction` must be either `none`, `sum` or `mean`"))
     end
 end
-
+cee(y, t) = mean(-t.*safe_log(y))
 cee(y::Number, t::Number) = -t*safe_log(y)
 
 @doc raw"""
@@ -75,7 +76,7 @@ function mae(y::AbstractVector, t::AbstractVector; reduction::String="mean")
         throw(ArgumentError("`reduction` must be either `none`, `sum` or `mean`"))
     end
 end
-
+mae(y, t) = mean(abs.(t.-y))
 mae(y::Number, t::Number) = abs(t-y)
 
 @doc raw"""
@@ -104,7 +105,10 @@ function huber(y::AbstractVector, t::AbstractVector; reduction::String="mean", �
         throw(ArgumentError("`reduction` must be either `none`, `sum` or `mean`"))
     end
 end
-
+function huber(y, t; δ = 1)
+    a = abs.(t-y)
+    mean(@. ifelse(a<=δ, a^2/2, (a-δ/2)δ))
+end
 huber(y::Number, t::Number; δ=1) = ifelse(abs(t-y)<=δ, abs(t-y)^2/2, (abs(t-y)-δ/2)δ)
 
 @doc raw"""
@@ -114,8 +118,8 @@ Log Cosh. Basically, it's [`mae`](@ref), but if the loss is small, it will be cl
 Logcosh(y, t) = \frac{\sum_{i=1}^{n} \log(\cosh(t_{i}-y_{i}))}{n}
 ```
 """
-function logcosh_loss(y::AbstractVector, t::AbstractVector; reduction::String="mean")
-    loss = @. log(cosh(t-y))
+function logcosh_loss(y::Vector, t::Vector; reduction::String="mean")
+    loss = @. safe_log(cosh(t-y))
     if reduction=="none"
         return loss
     elseif reduction=="sum"
@@ -126,8 +130,8 @@ function logcosh_loss(y::AbstractVector, t::AbstractVector; reduction::String="m
         throw(ArgumentError("`reduction` must be either `none`, `sum` or `mean`"))
     end
 end
-
-logcosh_loss(y::Number, t::Number) = log(cosh(t-y))
+logcosh_loss(y, t) = mean(@. safe_log(cosh(t-y)))
+logcosh_loss(y::Number, t::Number) = safe_log(cosh(t-y))
 
 @doc raw"""
     Poisson(y, t; reduction="mean")
@@ -137,7 +141,7 @@ Poisson(y, t) = \frac{\sum_{i=1}^{n} y_{i}-t_{i} \ln y}{n}
 ```
 """
 function poisson(y::AbstractVector, t::AbstractVector; reduction::String="mean")
-    loss = @. y - t*log(y)
+    loss = @. y - t*safe_log(y)
     if reduction=="none"
         return loss
     elseif reduction=="sum"
@@ -148,8 +152,8 @@ function poisson(y::AbstractVector, t::AbstractVector; reduction::String="mean")
         throw(ArgumentError("`reduction` must be either `none`, `sum` or `mean`"))
     end
 end
-
-poisson(y::Number, t::Number) = y - t*log(y)
+poisson(y, t) = mean(@. y - t*safe_log(y))
+poisson(y::Number, t::Number) = y - t*safe_log(y)
 
 @doc raw"""
     hinge(y, t; reduction="mean")
@@ -170,7 +174,7 @@ function hinge(y::AbstractVector, t::AbstractVector; reduction::String="mean")
         throw(ArgumentError("`reduction` must be either `none`, `sum` or `mean`"))
     end
 end
-
+hinge(y, t) = mean(@. max(1-y*t, 0))
 hinge(y::Number, t::Number) = max(1-y*t, 0)
 
 @doc raw"""
@@ -208,7 +212,20 @@ function smooth_hinge(y::AbstractVector, t::AbstractVector; reduction::String="m
         throw(ArgumentError("`reduction` must be either `none`, `sum` or `mean`"))
     end
 end
-
+function smooth_hinge(y, t)
+    z = t.*y
+    loss = similar(z)
+    for i in 1 : length(y)
+        if z[i] >= 0
+            loss[i] = 0
+        elseif 0 < z[i] < 1
+            loss[i] = (1-z[i])^2/2
+        else
+            loss[i] = 1/2-z[i]
+        end
+    end
+    return mean(loss)
+end
 function smooth_hinge(y::Number, t::Number)
     if t*y >= 0
         return 0

@@ -176,14 +176,9 @@ julia> F(rand(10, 10, 2, 5)) |> size
 (1000, )
 ```
 """
-mutable struct Flatten
-    csize::Tuple
-    function Flatten()
-        return new(())
-    end
-end
+struct Flatten end
 
-function (F::Flatten)(x::Array)
+function (F::Flatten)(x::AbstractArray)
     return reshape(x, :, size(x)[end])
 end
 
@@ -235,7 +230,7 @@ function dropout_kernel(x, p)
     return y
 end
 
-function (D::Dropout)(x)
+function (D::Dropout)(x::AbstractArray)
     y = dropout_kernel(x, D.p)
     return x .* y
 end

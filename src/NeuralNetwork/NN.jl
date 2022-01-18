@@ -2,6 +2,7 @@ module NeuralNetwork
 
 using LinearAlgebra
 using NNlib
+using NNlibCUDA
 using Zygote
 using Zygote: @adjoint
 

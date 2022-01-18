@@ -37,6 +37,8 @@ struct Conv{N, M, K, I, O}
     high_accuracy::Bool
 end
 
+Conv(σ, weight, bias, stride, padding, dilation, high_accuracy) = Conv{length(stride), length(padding), size(weight)[1:2], size(weight)[3:4]...}(σ, weight, bias, stride, padding, dilation, high_accuracy)
+
 function Conv(weight::AbstractArray{T, N}, σ, k::Tuple, io::Pair{<:Integer, <:Integer};
         stride = 1, padding = 0, dilation=1, high_accuracy::Bool=false) where {N, T}
     stride = expand(Val(N-2), stride)
