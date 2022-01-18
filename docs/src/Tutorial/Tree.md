@@ -53,5 +53,5 @@ $ dot -Tpng -o /home/ubuntu/tree2.png /home/ubuntu/tree2.dot
 $ dot -Tpng -o /home/ubuntu/tree3.png /home/ubuntu/tree3.dot
 ⋮
 ```
-!!! warning
-    This function is broken in HorseML v0.3.2
+!!! tips
+    Random Forest is implemented for multi-threaded learning, so you can speed up learning by specifying the `-t` option when you start Julia.

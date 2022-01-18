@@ -31,7 +31,7 @@ using HorseML.NeuralNetwork
 using HorseML.LossFunction
 
 train, test = Matrix.(dataloader("MNIST"))
-train_x, train_t = reshape(train[:, 2:end], :, 28, 28, 1, 1), Float32.(train[:, 1])
+train_x, train_t = Float32.(reshape(train[:, 2:end], :, 28, 28, 1, 1)), Float32.(train[:, 1])
 test_x, test_t = reshape(test[:, 2:end], :, 28, 28, 1, 1), Float32.(test[:, 1])
 train_data = [(train_x[i, :, :, :, :], train_t[i, :]) for i in 1 : 60000]
 test_data = [(test_x[i, :, :, :, :], test_t[i, :]) for i in 1 : 10000]
@@ -60,4 +60,24 @@ end
 
 #specify params
 trainable(L::MyLayer) = L.w, L.b
+```
+
+## Training on GPU
+Learning with large-scale data such as image data takes time if it is done with the CPU. Let's learn on the GPU (of course, this requires a GPU, so if you don't have a GPU, you'll learn as usual)!
+```
+using HorseML
+using HorseML.Preprocessing
+using HorseML.NeuralNetwork
+using HorseML.LossFunction
+
+train, test = Matrix.(dataloader("MNIST"))
+train_x, train_t = Float32.(reshape(train[:, 2:end], :, 28, 28, 1, 1)) |> gpu, Float32.(train[:, 1]) |> gpu
+test_x, test_t = reshape(test[:, 2:end], :, 28, 28, 1, 1), Float32.(test[:, 1])
+train_data = [(train_x[i, :, :, :, :], train_t[i, :]) for i in 1 : 60000]
+test_data = [(test_x[i, :, :, :, :], test_t[i, :]) for i in 1 : 10000]
+
+N = NetWork(Conv((3, 3), 1=>1, relu), MaxPool((2, 2)), Conv((2, 2), 1=>1, relu), MaxPool((2, 2)), Flatten(), Dense(36=>10, tanh)) |> gpu
+loss(x, y) = mse(N(x), y)
+opt = Descent()
+@epochs 10 train!(N, loss, train_data, opt)
 ```

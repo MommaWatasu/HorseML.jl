@@ -3,6 +3,7 @@
 ## Data Preprocessing
 ```@docs
 Preprocessing.dataloader
+Preprocessing.databuilder
 Preprocessing.DataSplitter
 ```
 

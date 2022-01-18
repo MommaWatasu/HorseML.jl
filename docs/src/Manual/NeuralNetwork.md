@@ -59,3 +59,10 @@ Momentum
 AdaGrad
 Adam
 ```
+
+## GPU Support
+
+```@docs
+gpu
+cpu
+```

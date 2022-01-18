@@ -10,6 +10,7 @@ These functions take predictive values and teacher data as arguments, but only s
 - Vector and Number
 - Matrix(just added an axis to the vector) and Vector
 - Matrix(just added an axis to the vector) and Number
+- Matrix and Matrix
 
 ```@docs
 LossFunction.mse

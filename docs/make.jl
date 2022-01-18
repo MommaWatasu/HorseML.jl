@@ -1,4 +1,5 @@
 using Documenter
+using HorseML
 using HorseML.Preprocessing
 using HorseML.NeuralNetwork
 using HorseML.Regression
