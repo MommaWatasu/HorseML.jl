@@ -75,51 +75,68 @@ julia> LE, OHE = LabelEncoder(), OneHotEncoder()
 julia> x, y = data[:, Not(:variety)], OHE(LE(data[:, :variety]));
 
 julia> databuilder(x, y)
-150-element Vector{Tuple{Matrix{Float64}, Matrix{Int64}}}:
- ([5.1; 3.5; 1.4; 0.2;;], [1; 0; 0;;])
- ([4.9; 3.0; 1.4; 0.2;;], [1; 0; 0;;])
- ([4.7; 3.2; 1.3; 0.2;;], [1; 0; 0;;])
- ([4.6; 3.1; 1.5; 0.2;;], [1; 0; 0;;])
- ([5.0; 3.6; 1.4; 0.2;;], [1; 0; 0;;])
- ([5.4; 3.9; 1.7; 0.4;;], [1; 0; 0;;])
- ([4.6; 3.4; 1.4; 0.3;;], [1; 0; 0;;])
- ([5.0; 3.4; 1.5; 0.2;;], [1; 0; 0;;])
- ([4.4; 2.9; 1.4; 0.2;;], [1; 0; 0;;])
- ([4.9; 3.1; 1.5; 0.1;;], [1; 0; 0;;])
- ([5.4; 3.7; 1.5; 0.2;;], [1; 0; 0;;])
- ([4.8; 3.4; 1.6; 0.2;;], [1; 0; 0;;])
- ([4.8; 3.0; 1.4; 0.1;;], [1; 0; 0;;])
+150-element Vector{Tuple{Matrix{Float64}, Matrix{Float64}}}:
+ ([5.1; 3.5; 1.4; 0.2;;], [1.0; 0.0; 0.0;;])
+ ([4.9; 3.0; 1.4; 0.2;;], [1.0; 0.0; 0.0;;])
+ ([4.7; 3.2; 1.3; 0.2;;], [1.0; 0.0; 0.0;;])
+ ([4.6; 3.1; 1.5; 0.2;;], [1.0; 0.0; 0.0;;])
+ ([5.0; 3.6; 1.4; 0.2;;], [1.0; 0.0; 0.0;;])
+ ([5.4; 3.9; 1.7; 0.4;;], [1.0; 0.0; 0.0;;])
+ ([4.6; 3.4; 1.4; 0.3;;], [1.0; 0.0; 0.0;;])
+ ([5.0; 3.4; 1.5; 0.2;;], [1.0; 0.0; 0.0;;])
+ ([4.4; 2.9; 1.4; 0.2;;], [1.0; 0.0; 0.0;;])
+ ([4.9; 3.1; 1.5; 0.1;;], [1.0; 0.0; 0.0;;])
+ ([5.4; 3.7; 1.5; 0.2;;], [1.0; 0.0; 0.0;;])
+ ([4.8; 3.4; 1.6; 0.2;;], [1.0; 0.0; 0.0;;])
+ ([4.8; 3.0; 1.4; 0.1;;], [1.0; 0.0; 0.0;;])
  ⋮
- ([6.0; 3.0; 4.8; 1.8;;], [0; 0; 1;;])
- ([6.9; 3.1; 5.4; 2.1;;], [0; 0; 1;;])
- ([6.7; 3.1; 5.6; 2.4;;], [0; 0; 1;;])
- ([6.9; 3.1; 5.1; 2.3;;], [0; 0; 1;;])
- ([5.8; 2.7; 5.1; 1.9;;], [0; 0; 1;;])
- ([6.8; 3.2; 5.9; 2.3;;], [0; 0; 1;;])
- ([6.7; 3.3; 5.7; 2.5;;], [0; 0; 1;;])
- ([6.7; 3.0; 5.2; 2.3;;], [0; 0; 1;;])
- ([6.3; 2.5; 5.0; 1.9;;], [0; 0; 1;;])
- ([6.5; 3.0; 5.2; 2.0;;], [0; 0; 1;;])
- ([6.2; 3.4; 5.4; 2.3;;], [0; 0; 1;;])
- ([5.9; 3.0; 5.1; 1.8;;], [0; 0; 1;;])
+ ([6.0; 3.0; 4.8; 1.8;;], [0.0; 0.0; 1.0;;])
+ ([6.9; 3.1; 5.4; 2.1;;], [0.0; 0.0; 1.0;;])
+ ([6.7; 3.1; 5.6; 2.4;;], [0.0; 0.0; 1.0;;])
+ ([6.9; 3.1; 5.1; 2.3;;], [0.0; 0.0; 1.0;;])
+ ([5.8; 2.7; 5.1; 1.9;;], [0.0; 0.0; 1.0;;])
+ ([6.8; 3.2; 5.9; 2.3;;], [0.0; 0.0; 1.0;;])
+ ([6.7; 3.3; 5.7; 2.5;;], [0.0; 0.0; 1.0;;])
+ ([6.7; 3.0; 5.2; 2.3;;], [0.0; 0.0; 1.0;;])
+ ([6.3; 2.5; 5.0; 1.9;;], [0.0; 0.0; 1.0;;])
+ ([6.5; 3.0; 5.2; 2.0;;], [0.0; 0.0; 1.0;;])
+ ([6.2; 3.4; 5.4; 2.3;;], [0.0; 0.0; 1.0;;])
+ ([5.9; 3.0; 5.1; 1.8;;], [0.0; 0.0; 1.0;;])
 ```
 """
-function databuilder(x::Matrix{TX}, y::Matrix{TY}; batches = 1) where {TX, TY}
+function databuilder(x::Matrix{TX}, t::Matrix{TY}; batches = 1) where {TX, TY}
+    PT = promote_type(TX, TY)
+    x, t = Matrix{PT}(x), Matrix{PT}(t)
     size(x, 1) % batches != 0 && @warn "the data size is not divisible by the batch size! some data will be omitted"
     N = round(Int64, size(x, 1) / batches)
-    x, y = x', y'
+    x, t = transpose(x), transpose(t)
     data = Vector{Tuple{Matrix{TX}, Matrix{TY}}}(undef, N)
     c = 1
     for n in 1 : N
-        data[n] = (x[:, c:n*batches], y[:, c:n*batches])
+        data[n] = (x[:, c:n*batches], t[:, c:n*batches])
         c += batches
     end
     return data
 end
 
-databuilder(x::Matrix, y::Vector; batches = 1) = databuilder(x, y[:, :], batches = batches)
-databuilder(x::DataFrame, y; batches=1) = databuilder(Matrix(x), y, batches = batches)
-databuilder(x::DataFrame, y::DataFrame; batches=1) = databuilder(Matrix(x), Matrix(y), batches = batches)
+function databuilder(x::Array{TX, 4}, t::Matrix{TY}; batches = 1) where {TX, TY}
+    PT = promote_type(TX, TY)
+    x, t = Array{PT, 4}(x), Matrix{PT}(t)
+    size(x, 1) % batches != 0 && @warn "the data size is not divisible by the batch size! some data will be omitted"
+    N = round(Int64, size(x, 1) / batches)
+    x, t = permutedims(x, (2, 3, 1, 4)), transpose(t)
+    data = Vector{Tuple{Array{PT, 4}, Matrix{PT}}}(undef, N)
+    c = 1
+    for n in 1 : N
+        data[n] = (x[:, :, c:n*batches, :], t[:, c:n*batches])
+        c += batches
+    end
+    return data
+end
+
+databuilder(x::Array, t::Vector; batches = 1) = databuilder(x, t[:, :], batches = batches)
+databuilder(x::DataFrame, t; batches=1) = databuilder(Matrix(x), t, batches = batches)
+databuilder(x::DataFrame, t::DataFrame; batches=1) = databuilder(Matrix(x), Matrix(t), batches = batches)
 
 """
     DataSplitter(ndata; test_size=nothing, train_size=nothing)

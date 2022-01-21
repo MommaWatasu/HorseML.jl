@@ -13,10 +13,10 @@ Basic gradient descent optimizer with learning rate `η`.
 
 """
 struct Descent
-    eta::Float64
+    eta::AbstractFloat
 end
 
-Descent(;η::Float64 = 0.1) = Descent(η)
+Descent(η::Float32 = 0.1) = Descent(η)
 
 apply!(opt::Descent, x::AbstractArray, Δ::AbstractArray) = opt.eta .* Δ
 
@@ -32,12 +32,12 @@ Momentum gradient descent optimizer with learning rate `η` and parameter of vel
 
 """
 struct Momentum
-    eta::Float64
-    alpha::Float64
+    eta::AbstractFloat
+    alpha::AbstractFloat
     velocity::Dict
 end
 
-Momentum(η = 0.01, α = 0.9) = Momentum(η, α, Dict())
+Momentum(η::Float32 = 0.01f0, α::Float32 = 0.9f0) = Momentum(η, α, Dict())
 
 function apply!(opt::Momentum, x::AbstractArray, Δ::AbstractArray)
     η, α = opt.eta, opt.alpha
@@ -57,11 +57,11 @@ Gradient descent optimizer with learning rate attenuation.
 
 """
 struct AdaGrad
-    eta::Float64
+    eta::AbstractFloat
     h::Dict
 end
 
-AdaGrad(η = 0.01) = AdaGrad(η, Dict())
+AdaGrad(η::Float32 = 0.01f0) = AdaGrad(η, Dict())
 
 function apply!(opt::AdaGrad, x::AbstractArray, Δ::AbstractArray)
     η = opt.eta
@@ -83,12 +83,12 @@ Gradient descent adaptive moment estimation optimizer.
 
 """
 struct Adam
-    eta::Float64
-    beta::Tuple{Float64, Float64}
+    eta::AbstractFloat
+    beta::Tuple{AbstractFloat, AbstractFloat}
     recode::Dict
 end
 
-Adam(η = 0.01, β = (0.9, 0.99)) = Adam(η, β, Dict())
+Adam(η::Float32 = 0.01f0, β::Tuple{Float32, Float32} = (0.9f0, 0.99f0)) = Adam(η, β, Dict())
 
 function apply!(opt::Adam, x::AbstractArray, Δ::AbstractArray)
     η, β = opt.eta, opt.beta

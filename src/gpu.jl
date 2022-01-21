@@ -32,10 +32,8 @@ adapt(x::Zygote.OneElement) = CUDA.cu(collect(x))
 cpu(x::AbstractArray) = Array(x)
 
 for processor in (:gpu, :cpu)
-    @eval begin function $(Symbol("array_$(processor)_obj"))(objs::AbstractArray{T}) where {T}
-            fields = fieldnames(T)
-            return new_struct(obj, [$(processor)(getfield(obj, f)) for f in fields]...)
-        end
+    @eval begin 
+        $(Symbol("array_$(processor)_obj"))(objs::AbstractArray{T}) where {T} = collect([$(processor)(objs[i]) for i in 1 : length(objs)])
     end
     
     @eval begin
