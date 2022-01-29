@@ -11,7 +11,7 @@ Unlike other classifiers, this model doesn't require the data used for training 
 using HorseML.Preprocessing
 
 using HorseML.Tree
-using HorseML.Tree: fit!, predict
+using HorseML.Tree: fit!
 
 data = Matrix(dataloader("iris"))
 x, t = data[:, 1:4], data[:, 5]

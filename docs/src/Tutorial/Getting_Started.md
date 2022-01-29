@@ -78,6 +78,7 @@ using BSON: @save
 ```
 and loading:
 ```
+using HorseML
 using BSON
 using BSON: @load
 

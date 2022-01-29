@@ -14,12 +14,15 @@ LE = LabelEncoder()
 OHE = OneHotEncoder()
 train_data, test_data = DS(data)
 train_x, train_t = Float32.(train_data[:, 1:4]), OHE(LE(train_data[:, 5]))
-train_data = [(train_x[i, :], train_t[i, :]) for i in 1 : size(train_t, 1)]
+test_x, test_t = Float32.(test_data[:, 1:4]), OHE(LE(test_data[:, 5]))
+#`databuilder` will format the data with the features and teacher data.
+train_data = databuilder(train_x, train_t)
 
 N = NetWork(Dense(4=>2, relu), Dense(2=>3, σ))
 loss(x, y) = mse(N(x), y)
 opt = Adam()
 train!(N, loss, train_data, opt)
+loss(test_x', test_t')
 ```
 I wrote it all at once, but I'm doing is preparing the data, then definig and training the model.
 
@@ -31,10 +34,8 @@ using HorseML.NeuralNetwork
 using HorseML.LossFunction
 
 train, test = Matrix.(dataloader("MNIST"))
-train_x, train_t = Float32.(reshape(train[:, 2:end], :, 28, 28, 1, 1)), Float32.(train[:, 1])
-test_x, test_t = reshape(test[:, 2:end], :, 28, 28, 1, 1), Float32.(test[:, 1])
-train_data = [(train_x[i, :, :, :, :], train_t[i, :]) for i in 1 : 60000]
-test_data = [(test_x[i, :, :, :, :], test_t[i, :]) for i in 1 : 10000]
+train_x, train_t = Float32.(reshape(train[:, 2:end], :, 28, 28, 1)), Float32.(train[:, 1])
+train_data = databuilder(train_x, train_t)
 
 N = NetWork(Conv((3, 3), 1=>1, relu), MaxPool((2, 2)), Conv((2, 2), 1=>1, relu), MaxPool((2, 2)), Flatten(), Dense(36=>10, tanh))
 loss(x, y) = mse(N(x), y)
@@ -72,9 +73,7 @@ using HorseML.LossFunction
 
 train, test = Matrix.(dataloader("MNIST"))
 train_x, train_t = Float32.(reshape(train[:, 2:end], :, 28, 28, 1, 1)) |> gpu, Float32.(train[:, 1]) |> gpu
-test_x, test_t = reshape(test[:, 2:end], :, 28, 28, 1, 1), Float32.(test[:, 1])
 train_data = [(train_x[i, :, :, :, :], train_t[i, :]) for i in 1 : 60000]
-test_data = [(test_x[i, :, :, :, :], test_t[i, :]) for i in 1 : 10000]
 
 N = NetWork(Conv((3, 3), 1=>1, relu), MaxPool((2, 2)), Conv((2, 2), 1=>1, relu), MaxPool((2, 2)), Flatten(), Dense(36=>10, tanh)) |> gpu
 loss(x, y) = mse(N(x), y)

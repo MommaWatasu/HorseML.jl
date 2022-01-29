@@ -26,6 +26,8 @@ train_t = OHE(train_t)
 ## Logistic Regression
 Let's create a classifier using the normalized Iris dataset. First of all, we will classify using Logistic Regression, a basic classifier.
 ```
+using HorseML.Classification
+using HorseML.Classification: fit!
 model = Logistic()
 fit!(model, train_x, train_t)
 
@@ -47,7 +49,7 @@ Here, let's use the LossFunction module to know the accuracy score. We haven't j
 ```
 using HorseML.LossFunction
 
-accuracy_score(model, x, t) = mse(predict(model, x), t)
+accuracy_score(model, x, t) = mse(model(x), t)
 accuracy_score(model, test_x, test_t)
 ```
 Amazing! So far, we have been able to finish from building basic models of regression and classification to calculating accuracy.
