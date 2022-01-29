@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Preprocessing · HorseML</title><script data-outdated-warner src="../../assets/warner.js"></script><link href="https://cdnjs.cloudflare.com/ajax/libs/lato-font/3.0.0/css/lato-font.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/juliamono/0.039/juliamono-regular.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.13.11/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL="../.."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="../../assets/documenter.js"></script><script src="../../siteinfo.js"></script><script src="../../../versions.js"></script><script src="../../../copy.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/documenter-dark.css" data-theme-name="documenter-dark" data-theme-primary-dark/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="../../assets/themeswap.js"></script></head><body><div id="documenter"><nav class="docs-sidebar"><a class="docs-logo" href="../../"><img src="../../assets/logo.png" alt="HorseML logo"/></a><div class="docs-package-name"><span class="docs-autofit"><a href="../../">HorseML</a></span></div><form class="docs-search" action="../../search/"><input class="docs-search-query" id="documenter-search-query" name="q" type="text" placeholder="Search docs"/></form><ul class="docs-menu"><li><a class="tocitem" href="../../">Home</a></li><li><span class="tocitem">Tutorial</span><ul><li><a class="tocitem" href="../../Tutorial/Welcome/">Welcome to HorseML</a></li><li><a class="tocitem" href="../../Tutorial/Getting_Started/">Getting Started</a></li><li><a class="tocitem" href="../../Tutorial/Preprocessing/">Preprocessing</a></li><li><a class="tocitem" href="../../Tutorial/Classifiers/">Classifiers</a></li><li><a class="tocitem" href="../../Tutorial/Tree/">Tree</a></li><li><a class="tocitem" href="../../Tutorial/NeuralNetwork/">NeuralNetwork</a></li></ul></li><li><span class="tocitem">Manual</span><ul><li class="is-active"><a class="tocitem" href>Preprocessing</a><ul class="internal"><li><a class="tocitem" href="#Data-Preprocessing"><span>Data Preprocessing</span></a></li><li><a class="tocitem" href="#Encoders"><span>Encoders</span></a></li><li><a class="tocitem" href="#Scaler"><span>Scaler</span></a></li></ul></li><li><a class="tocitem" href="../LossFunction/">LossFunction</a></li><li><a class="tocitem" href="../Regression/">Regression</a></li><li><a class="tocitem" href="../Classification/">Classification</a></li><li><a class="tocitem" href="../NeuralNetwork/">NeuralNetwork</a></li></ul></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><nav class="breadcrumb"><ul class="is-hidden-mobile"><li><a class="is-disabled">Manual</a></li><li class="is-active"><a href>Preprocessing</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>Preprocessing</a></li></ul></nav><div class="docs-right"><a class="docs-edit-link" href="https://github.com/MommaWatasu/HorseML.jl/blob/master/docs/src/Manual/Preprocessing.md" title="Edit on GitHub"><span class="docs-icon fab"></span><span class="docs-label is-hidden-touch">Edit on GitHub</span></a><a class="docs-settings-button fas fa-cog" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-sidebar-button fa fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a></div></header><article class="content" id="documenter-page"><h1 id="Preprocessing"><a class="docs-heading-anchor" href="#Preprocessing">Preprocessing</a><a id="Preprocessing-1"></a><a class="docs-heading-anchor-permalink" href="#Preprocessing" title="Permalink"></a></h1><h2 id="Data-Preprocessing"><a class="docs-heading-anchor" href="#Data-Preprocessing">Data Preprocessing</a><a id="Data-Preprocessing-1"></a><a class="docs-heading-anchor-permalink" href="#Data-Preprocessing" title="Permalink"></a></h2><article class="docstring"><header><a class="docstring-binding" id="HorseML.Preprocessing.dataloader" href="#HorseML.Preprocessing.dataloader"><code>HorseML.Preprocessing.dataloader</code></a> — <span class="docstring-category">Function</span></header><section><div><pre><code class="language-julia hljs">dataloader(name; header=true, dir=&quot;HorseMLdatasets&quot;)</code></pre><p>Load a data for Machine Learning. <code>name</code> is either the name of the datasets or the full path of the data file to be loaded. The following three can be specified as the name of the dataset in <code>name</code>.</p><ul><li><code>MNIST</code> : The MNIST Datasets</li><li><code>iris</code> : The iris Datasets</li><li><code>BostonHousing</code> : Boston Housing DataSets</li></ul><p>And these datasets are downloaded and saved by creating a <code>dir</code> folder under the home directly(i.e. it is saved in the <code>/home_directory/HorseMLdatasets</code> by default). When importing a data file, you can specify whether to read the header with <code>header</code>.</p><p><strong>Example</strong></p><pre><code class="language- hljs">julia&gt; dataloader(&quot;MNIST&quot;);
+
+julia&gt; dataloader(&quot;/home/ubuntu/data/data.csv&quot;, header = false)</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/MommaWatasu/HorseML.jl/blob/c2daf7570293d2f5a0e21a3b28914fe1f277cc12/src/Preprocessing/Data.jl#L1-L16">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="HorseML.Preprocessing.databuilder" href="#HorseML.Preprocessing.databuilder"><code>HorseML.Preprocessing.databuilder</code></a> — <span class="docstring-category">Function</span></header><section><div><pre><code class="language-julia hljs">databuilder(x, y; batches=1)</code></pre><p><code>x</code> is the feature value, <code>y</code> is the teacher data, and <code>bacthes</code> is the batch size. This function formats and returns the data used for the neural network(however, <code>x</code> and<code>y</code> must be Arrays or DataFrames, so please use this function  after encoding, normalization, etc.).</p><p><strong>Example</strong></p><pre><code class="language-julia-repl hljs">julia&gt; data = dataloader(&quot;iris&quot;);
+
+julia&gt; LE, OHE = LabelEncoder(), OneHotEncoder()
+(LabelEncoder(Dict{Any, Any}()), OneHotEncoder())
+
+julia&gt; x, y = data[:, Not(:variety)], OHE(LE(data[:, :variety]));
+
+julia&gt; databuilder(x, y)
+150-element Vector{Tuple{Matrix{Float64}, Matrix{Float64}}}:
+ ([5.1; 3.5; 1.4; 0.2;;], [1.0; 0.0; 0.0;;])
+ ([4.9; 3.0; 1.4; 0.2;;], [1.0; 0.0; 0.0;;])
+ ([4.7; 3.2; 1.3; 0.2;;], [1.0; 0.0; 0.0;;])
+ ([4.6; 3.1; 1.5; 0.2;;], [1.0; 0.0; 0.0;;])
+ ([5.0; 3.6; 1.4; 0.2;;], [1.0; 0.0; 0.0;;])
+ ([5.4; 3.9; 1.7; 0.4;;], [1.0; 0.0; 0.0;;])
+ ([4.6; 3.4; 1.4; 0.3;;], [1.0; 0.0; 0.0;;])
+ ([5.0; 3.4; 1.5; 0.2;;], [1.0; 0.0; 0.0;;])
+ ([4.4; 2.9; 1.4; 0.2;;], [1.0; 0.0; 0.0;;])
+ ([4.9; 3.1; 1.5; 0.1;;], [1.0; 0.0; 0.0;;])
+ ([5.4; 3.7; 1.5; 0.2;;], [1.0; 0.0; 0.0;;])
+ ([4.8; 3.4; 1.6; 0.2;;], [1.0; 0.0; 0.0;;])
+ ([4.8; 3.0; 1.4; 0.1;;], [1.0; 0.0; 0.0;;])
+ ⋮
+ ([6.0; 3.0; 4.8; 1.8;;], [0.0; 0.0; 1.0;;])
+ ([6.9; 3.1; 5.4; 2.1;;], [0.0; 0.0; 1.0;;])
+ ([6.7; 3.1; 5.6; 2.4;;], [0.0; 0.0; 1.0;;])
+ ([6.9; 3.1; 5.1; 2.3;;], [0.0; 0.0; 1.0;;])
+ ([5.8; 2.7; 5.1; 1.9;;], [0.0; 0.0; 1.0;;])
+ ([6.8; 3.2; 5.9; 2.3;;], [0.0; 0.0; 1.0;;])
+ ([6.7; 3.3; 5.7; 2.5;;], [0.0; 0.0; 1.0;;])
+ ([6.7; 3.0; 5.2; 2.3;;], [0.0; 0.0; 1.0;;])
+ ([6.3; 2.5; 5.0; 1.9;;], [0.0; 0.0; 1.0;;])
+ ([6.5; 3.0; 5.2; 2.0;;], [0.0; 0.0; 1.0;;])
+ ([6.2; 3.4; 5.4; 2.3;;], [0.0; 0.0; 1.0;;])
+ ([5.9; 3.0; 5.1; 1.8;;], [0.0; 0.0; 1.0;;])</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/MommaWatasu/HorseML.jl/blob/c2daf7570293d2f5a0e21a3b28914fe1f277cc12/src/Preprocessing/Data.jl#L63-L106">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="HorseML.Preprocessing.DataSplitter" href="#HorseML.Preprocessing.DataSplitter"><code>HorseML.Preprocessing.DataSplitter</code></a> — <span class="docstring-category">Type</span></header><section><div><pre><code class="language-julia hljs">DataSplitter(ndata; test_size=nothing, train_size=nothing)</code></pre><p>Split the data into test data and training data. <code>ndata</code> is the number of the data, and you must specify either <code>test_size</code> or <code>train_size</code>. thease parameter can be proprtional or number of data.</p><div class="admonition is-info"><header class="admonition-header">Note</header><div class="admonition-body"><p>If both <code>test_size</code> and <code>train_size</code> are specified, <code>test_size</code> takes precedence.</p></div></div><p>#Example</p><pre><code class="language-julia-repl hljs">julia&gt; x = rand(20, 2);
+
+julia&gt; DS = DataSplitter(50, train_size = 0.3);
+
+julia&gt; train, test = DS(x, dims = 2);
+
+julia&gt; train |&gt; size
+(6, 2)
+
+julia&gt; test |&gt; size
+(14, 2)</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/MommaWatasu/HorseML.jl/blob/c2daf7570293d2f5a0e21a3b28914fe1f277cc12/src/Preprocessing/Data.jl#L141-L162">source</a></section></article><h2 id="Encoders"><a class="docs-heading-anchor" href="#Encoders">Encoders</a><a id="Encoders-1"></a><a class="docs-heading-anchor-permalink" href="#Encoders" title="Permalink"></a></h2><article class="docstring"><header><a class="docstring-binding" id="HorseML.Preprocessing.LabelEncoder" href="#HorseML.Preprocessing.LabelEncoder"><code>HorseML.Preprocessing.LabelEncoder</code></a> — <span class="docstring-category">Type</span></header><section><div><pre><code class="language-julia hljs">LabelEncoder()</code></pre><p>LabelEncoder structure. <code>LE(label; count=false, decode=false)</code> Convert labels(like string) to class numbers(encode), and convert class numbers to labels(decode).</p><p><strong>Example</strong></p><pre><code class="language-julia-repl hljs">julia&gt; label = [&quot;Apple&quot;, &quot;Apple&quot;, &quot;Pear&quot;, &quot;Pear&quot;, &quot;Lemon&quot;, &quot;Apple&quot;, &quot;Pear&quot;, &quot;Lemon&quot;]
+8-element Vector{String}
+ &quot;Apple&quot;
+ &quot;Apple&quot;
+ &quot;Pear&quot;
+ &quot;Pear&quot;
+ &quot;Lemon&quot;
+ &quot;Apple&quot;
+ &quot;Pear&quot;
+ &quot;Lemon&quot;
+
+julia&gt; LE = LabelEncoder()
+LabelEncoder(Dict{Any, Any}())
+
+julia&gt; classes, count = LE(label, count=true) #Encode
+([3.0 3.0 … 1.0 2.0], [3.0 2.0 3.0])
+
+julia&gt; LE(classes, decode=true) #Decode
+1×18 Matrix{String}:
+ &quot;Apple&quot; &quot;Apple&quot; &quot;Pear&quot; &quot;Pear&quot; &quot;Lemon&quot; &quot;Apple&quot; &quot;Pear&quot; &quot;Lemon&quot;</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/MommaWatasu/HorseML.jl/blob/c2daf7570293d2f5a0e21a3b28914fe1f277cc12/src/Preprocessing/Encoder.jl#L3-L30">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="HorseML.Preprocessing.OneHotEncoder" href="#HorseML.Preprocessing.OneHotEncoder"><code>HorseML.Preprocessing.OneHotEncoder</code></a> — <span class="docstring-category">Type</span></header><section><div><pre><code class="language-julia hljs">OneHotEncoder()</code></pre><p>convert data to Ont-Hot format. If you specified <code>decode</code>, <code>data</code> will be decoded.</p><p><strong>Example</strong></p><pre><code class="language-julia-repl hljs">julia&gt; x = [4.9 3.0; 4.6 3.1; 4.4 2.9; 4.8 3.4; 5.1 3.8; 5.4 3.4; 4.8 3.4; 5.2 4.1; 5.5 4.2; 5.5 3.5; 4.8 3.0; 5.1 3.8; 5.0 3.3; 6.4 3.2; 5.7 2.8; 6.1 2.9; 6.7 3.1; 5.6 2.5; 6.3 2.5; 5.6 3.0; 5.6 2.7; 7.6 3.0; 6.4 2.7; 6.4 3.2; 6.5 3.0; 7.7 3.8; 7.2 3.2; 7.2 3.0; 6.3 2.8; 6.1 2.6; 6.3 3.4; 6.0 3.0; 6.9 3.1; 6.7 3.1; 5.8 2.7; 6.8 3.2; 6.3 2.5];#These data are also used to explanations of other functions.
+
+julia&gt; t = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2];
+
+julia&gt; OHE = OneHotEncoder()
+OneHotEncoder()
+
+julia&gt; ct = OHE(t)
+37×3 Matrix{Float64}:
+ 1.0 0.0 0.0
+ 1.0 0.0 0.0
+ 1.0 0.0 0.0
+ 1.0 0.0 0.0
+ 1.0 0.0 0.0
+ 1.0 0.0 0.0
+ 1.0 0.0 0.0
+ 1.0 0.0 0.0
+ 1.0 0.0 0.0
+ 1.0 0.0 0.0
+ 1.0 0.0 0.0
+ 1.0 0.0 0.0
+ 0.0 1.0 0.0
+ 0.0 1.0 0.0
+ 0.0 1.0 0.0
+ 0.0 1.0 0.0
+ 0.0 1.0 0.0
+ ⋮
+ 0.0 1.0 0.0
+ 0.0 0.0 1.0
+ 0.0 0.0 1.0
+ 0.0 0.0 1.0
+ 0.0 0.0 1.0
+ 0.0 0.0 1.0
+ 0.0 0.0 1.0
+ 0.0 0.0 1.0
+ 0.0 0.0 1.0
+ 0.0 0.0 1.0
+ 0.0 0.0 1.0
+ 0.0 0.0 1.0
+ 0.0 0.0 1.0
+ 0.0 0.0 1.0
+ 0.0 0.0 1.0
+ 0.0 0.0 1.0
+ 0.0 0.0 1.0
+
+julia&gt; OHE(ct, decode = true)
+37-element Vector{Int64}:
+ 1
+ 1
+ 1
+ 1
+ 1
+ 1
+ 1
+ 1
+ 1
+ 1
+ 1
+ 1
+ 1
+ 2
+ 2
+ 2
+ 2
+ ⋮
+ 2
+ 3
+ 3
+ 3
+ 3
+ 3
+ 3
+ 3
+ 3
+ 3
+ 3
+ 3
+ 3
+ 3
+ 3
+ 3
+ 3</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/MommaWatasu/HorseML.jl/blob/c2daf7570293d2f5a0e21a3b28914fe1f277cc12/src/Preprocessing/Encoder.jl#L63-L152">source</a></section></article><h2 id="Scaler"><a class="docs-heading-anchor" href="#Scaler">Scaler</a><a id="Scaler-1"></a><a class="docs-heading-anchor-permalink" href="#Scaler" title="Permalink"></a></h2><article class="docstring"><header><a class="docstring-binding" id="HorseML.Preprocessing.Standard" href="#HorseML.Preprocessing.Standard"><code>HorseML.Preprocessing.Standard</code></a> — <span class="docstring-category">Type</span></header><section><div><pre><code class="language-julia hljs">Standard()</code></pre><p>Standard Scaler. This scaler scale data as: <span>$\tilde{\boldsymbol{x}} = \frac{x_{i}-\mu}{\sigma}$</span></p><p><strong>Example</strong></p><pre><code class="language-julia-repl hljs">julia&gt; x = [
+    16.862463771320925 68.10823385851712
+    15.382965696961577 65.4313485700859
+    8.916228406218375 53.92034559524475
+    10.560285659132695 59.17305391117168
+    12.142253214135884 62.28708207525656
+    5.362107221163482 43.604947901567414
+    13.893239446341777 62.44348617377496
+    11.871357065173395 60.28433066289655
+    29.83792267802442 69.22281924803998
+    21.327107214235483 70.15810991597944
+    23.852372696012498 69.81780163668844
+    26.269031430914108 67.61037566099782
+    22.78907104644012 67.78105545358633
+    26.73342178134947 68.59263965946904
+    9.107259141706415 56.565383817343495
+    29.38551885863976 68.1005579469209
+    7.935966787763017 53.76264777936664
+    29.01677894379809 68.69484161138638
+    6.839609488194577 49.69794758177567
+    13.95215840314148 62.058116579899085]; #These data are also used to explanations of other functions.
+
+julia&gt; t = [169.80980778351542, 167.9081124078835, 152.30845618985222, 160.3110300206261, 161.96826472170756, 136.02842285615077, 163.98131131382686, 160.117817321485, 172.22758529098235, 172.21342437006865, 171.8939175591617, 169.83018083884602, 171.3878062674257, 170.52487535026015, 156.40282783981309, 170.6488327896672, 151.69267899906185, 172.32478221316322, 145.14365314788827, 163.79383292080666];
+
+julia&gt; scaler = Standard()
+Standard(Float64[])
+
+julia&gt; fit!(scaler, x)
+2×2 Matrix{Float64}:
+ 19.0591   64.467
+  6.95818   6.68467
+
+julia&gt; transform(scaler, x)
+20×2 Matrix{Float64}:
+  0.0310374   0.44579
+  0.0104337   0.218714
+  1.01139     0.710027
+  1.37285     0.954091
+ -0.895893   -0.270589
+  0.983361    0.47397
+  1.39855     0.645624
+ -1.31861    -0.901482
+  0.0147702   0.241708
+  0.29675     0.483076
+ -0.338824   -0.104812
+  0.432442    0.387922
+  0.860418    0.567095
+ -0.495306    0.140871
+  0.963084    0.552767
+ -1.38901    -1.05926
+  0.469323    0.719196
+  0.0669475   0.512023
+ -1.47583    -1.44017
+ -1.99789    -3.27656</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/MommaWatasu/HorseML.jl/blob/c2daf7570293d2f5a0e21a3b28914fe1f277cc12/src/Preprocessing/SS.jl#L1-L63">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="HorseML.Preprocessing.MinMax" href="#HorseML.Preprocessing.MinMax"><code>HorseML.Preprocessing.MinMax</code></a> — <span class="docstring-category">Type</span></header><section><div><pre><code class="language-julia hljs">MinMax()</code></pre><p>MinMax Scaler. This scaler scale data as: <span>$\tilde{\boldsymbol{x}} = \frac{\boldsymbol{x}-min(\boldsymbol{x})}{max(\boldsymbol{x})-min(\boldsymbol{x})}$</span></p><p><strong>Example</strong></p><pre><code class="language-julia-repl hljs">julia&gt; scaler = MinMax()
+MinMax(Float64[])
+
+julia&gt; fit!(scaler, x)
+2×2 Matrix{Float64}:
+  1.39855   0.954091
+ -1.99789  -3.27656
+
+julia&gt; transform(scaler, x)
+20×2 Matrix{Float64}:
+ 0.597368  0.879853
+ 0.591301  0.826179
+ 0.88601   0.942311
+ 0.992432  1.0
+ 0.324455  0.710522
+ 0.877757  0.886514
+ 1.0       0.927088
+ 0.199996  0.561398
+ 0.592578  0.831614
+ 0.675601  0.888666
+ 0.488471  0.749707
+ 0.715552  0.866175
+ 0.841559  0.908526
+ 0.442398  0.807779
+ 0.871787  0.905139
+ 0.179268  0.524104
+ 0.72641   0.944478
+ 0.607941  0.895508
+ 0.153707  0.43407
+ 0.0       0.0</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/MommaWatasu/HorseML.jl/blob/c2daf7570293d2f5a0e21a3b28914fe1f277cc12/src/Preprocessing/MM.jl#L1-L39">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="HorseML.Preprocessing.Robust" href="#HorseML.Preprocessing.Robust"><code>HorseML.Preprocessing.Robust</code></a> — <span class="docstring-category">Type</span></header><section><div><pre><code class="language-julia hljs">Robust()</code></pre><p>Robust Scaler. This scaler scale data as: <span>$\tilde{\boldsymbol{x}} = \frac{\boldsymbol{x}-Q2}{Q3 - Q1}$</span></p><p><strong>Example</strong></p><pre><code class="language-julia-repl hljs">julia&gt; scaler = Robust()
+Robust(Float64[])
+
+julia&gt; fit!(scaler, x)
+3×2 Matrix{Float64}:
+ 0.412913  0.739911
+ 0.602654  0.873014
+ 0.849116  0.905986
+
+julia&gt; transform(scaler, x)
+20×2 Matrix{Float64}:
+ -0.0121192   0.041181
+ -0.0260262  -0.28201
+  0.649595    0.417263
+  0.89357     0.764633
+ -0.637774   -0.978423
+  0.630675    0.0812893
+  0.910919    0.3256
+ -0.923097   -1.87636
+ -0.0230992  -0.249283
+  0.16723     0.0942497
+ -0.261766   -0.742477
+  0.258819   -0.041181
+  0.547691    0.213832
+ -0.367388   -0.392802
+  0.616988    0.193438
+ -0.970618   -2.10092
+  0.283712    0.430314
+  0.0121192   0.135449
+ -1.02922    -2.64305
+ -1.38159    -5.25675</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/MommaWatasu/HorseML.jl/blob/c2daf7570293d2f5a0e21a3b28914fe1f277cc12/src/Preprocessing/RS.jl#L1-L40">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="HorseML.Preprocessing.fit!" href="#HorseML.Preprocessing.fit!"><code>HorseML.Preprocessing.fit!</code></a> — <span class="docstring-category">Function</span></header><section><div><pre><code class="language-julia hljs">fit!(scaler, x; dims=1)</code></pre><p>fit the scaler with <code>x</code>. <code>dims</code> is the dimension of the number of data.</p></div><a class="docs-sourcelink" target="_blank" href="https://github.com/MommaWatasu/HorseML.jl/blob/c2daf7570293d2f5a0e21a3b28914fe1f277cc12/src/Preprocessing/SS.jl#L69-L72">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="HorseML.Preprocessing.transform" href="#HorseML.Preprocessing.transform"><code>HorseML.Preprocessing.transform</code></a> — <span class="docstring-category">Function</span></header><section><div><pre><code class="language-julia hljs">transform(scaler, x; dims=1)</code></pre><p>transform data with scaler. <code>dims</code> is the dimension of the number of data.</p></div><a class="docs-sourcelink" target="_blank" href="https://github.com/MommaWatasu/HorseML.jl/blob/c2daf7570293d2f5a0e21a3b28914fe1f277cc12/src/Preprocessing/SS.jl#L79-L82">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="HorseML.Preprocessing.fit_transform!" href="#HorseML.Preprocessing.fit_transform!"><code>HorseML.Preprocessing.fit_transform!</code></a> — <span class="docstring-category">Function</span></header><section><div><pre><code class="language-julia hljs">fit_transform!(scaler, x; dims=1)</code></pre><p>fit scaler with <code>x</code>, and transform <code>x</code>. <code>dims</code> is the dimension of the number of data.</p></div><a class="docs-sourcelink" target="_blank" href="https://github.com/MommaWatasu/HorseML.jl/blob/c2daf7570293d2f5a0e21a3b28914fe1f277cc12/src/Preprocessing/SS.jl#L99-L102">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="HorseML.Preprocessing.inv_transform" href="#HorseML.Preprocessing.inv_transform"><code>HorseML.Preprocessing.inv_transform</code></a> — <span class="docstring-category">Function</span></header><section><div><pre><code class="language-julia hljs">inv_transform(scaler, x; dims=1)</code></pre><p>Convert <code>x</code> in reverse. <code>dims</code> is the dimension of the number of data.</p></div><a class="docs-sourcelink" target="_blank" href="https://github.com/MommaWatasu/HorseML.jl/blob/c2daf7570293d2f5a0e21a3b28914fe1f277cc12/src/Preprocessing/SS.jl#L110-L113">source</a></section></article></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../../Tutorial/NeuralNetwork/">« NeuralNetwork</a><a class="docs-footer-nextpage" href="../LossFunction/">LossFunction »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 0.27.12 on <span class="colophon-date" title="Saturday 29 January 2022 13:32">Saturday 29 January 2022</span>. Using Julia version 1.7.1.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
