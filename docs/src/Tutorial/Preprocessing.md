@@ -18,7 +18,7 @@ Can I download the mnist_train.csv(110MB)? (y/n)
 
 Let's also read the local data. 
 ```
-#Please create train.csv directly under the /home_directory/learningdatasets/ as follows:
+#Please create train.csv directly under the /home_directory/HorseMLdatasets/ as follows:
 #0.202027,0.246752,0.608301,0.406351,0.0260402,0.747845
 #0.735292,0.332892,0.438458,0.0787028,0.797796,0.294831
 #0.710725,0.213594,0.527118,0.579191,0.298599,0.23684
