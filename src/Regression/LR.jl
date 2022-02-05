@@ -2,7 +2,7 @@
     Lasso(; alpha = 0.1, tol = 1e-4, mi = 1e+8)
 Lasso Regression structure. Each parameters are as follows:
 - `alpha` : leaarning rate.
-- `mine` : Allowable error.
+- `th` : Threshold to judge that it has converged.
 - `max` : Maximum number of learning.
 
 # Example
@@ -41,11 +41,11 @@ julia> model(x)
 ```
 """
 mutable struct Lasso
-    w::Array{Float64, 1}
+    w::Vector{Float64}
     α::Float64
     max::Int64
-    mine::Float64
-    Lasso(; alpha = 0.1, max = 1e+8, mine = 1e-4) = new(Array{Float64}(undef, 0), alpha, max, mine)
+    th::Float64
+    Lasso(; alpha = 0.1, max = 1e+8, th = 1e-4) = new(Array{Float64}(undef, 0), alpha, max, th)
 end
 
 soft_threshold(y, α) = sign.(y) .* max.(abs.(y) .- α, 0)
@@ -53,8 +53,8 @@ soft_threshold(y, α) = sign.(y) .* max.(abs.(y) .- α, 0)
 supermum_eigen(x) = maximum(sum(abs.(x), dims=1))
 
 function fit!(model::Lasso, x, t)
-    coverge(x, mine) = @. abs(x) < mine
-    function update!(w, x, t, α, rho)
+    coverge(x, th) = @. abs(x) < th
+    function update(w, x, t, α, rho)
         res = t - x * w
         return soft_threshold(w + (x' * res) / rho, α / rho)
     end
@@ -63,8 +63,8 @@ function fit!(model::Lasso, x, t)
     w = zeros(size(x, 2))
     rho = supermum_eigen(x' * x)
     for _ in 1 : model.max
-        w_new = update!(w, x, t, α, rho)
-        if coverge.(w_new - w, model.mine) == trues(size(w)...)
+        w_new = update(w, x, t, α, rho)
+        if coverge.(w_new - w, model.th) == trues(size(w)...)
             model.w = w_new
             return
         end
