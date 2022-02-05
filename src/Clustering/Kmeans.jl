@@ -1,0 +1,56 @@
+mutable struct Kmeans
+    μ::Matrix{Float64}
+    max::Int64
+    th::Float64
+    Kmeans(; max = 1e+8, th = 1e-4) = new(Array{Float64}(undef, 0, 0), max, th)
+end
+
+function clustering(μ, x)
+    r = zeros(size(x, 1), K)
+    for n in 1 : size(x, 1)
+        diff = Matrix(undef, size(μ)...)
+        for k in 1 : K
+            diff[k, :] = x[n, :] - μ[k, :]
+        end
+        distance = @. abs(diff)
+        r[n, argmin(vec(sum(distance, dims=2)))] = 1
+    end
+    return r
+end
+
+function update(μ, x, K)
+    r = clustering(μ, x)
+    μ = similar(μ)
+    for k in 1 : K
+        μ[k, :] = sum(x .* r[:, k], dims=1) / sum(r[:, k])
+    end
+    return μ
+end
+
+"""
+    fit!(model::Kmeans, x, K)
+x is Number of data × Number of feature
+"""
+function fit!(model::Kmeans, x, K)
+    coverge(x, th) = @. abs(x) < th
+    ma = maximum(x, dims=1)
+    mi = minimum(x, dims=1)
+    interval = (ma-mi) / (K-1)
+    μ = Array{Float64, 2}(undef, K, size(x, 2))
+    for i in 1 : K-1
+        μ[i, :] = mi
+        mi += interval
+    end
+    for _ in 1 : model.max
+        μ_new = update(μ, x, K)
+        if coverge.(μ_new - μ, model.th) == trues(size(μ)...)
+            model.μ = μ_new
+            return
+        end
+        μ = μ_new
+    end
+    @warn "Not Converged!"
+    model.μ = μ
+end
+
+(model::Kmeans)(x) = clustering(model.μ, x)
