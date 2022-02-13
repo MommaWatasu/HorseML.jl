@@ -1,11 +1,11 @@
-mutable struct Kmeans
+mutable struct Kmeans{K}
     μ::Matrix{Float64}
     max::Int64
     th::Float64
-    Kmeans(; max = 1e+8, th = 1e-4) = new(Array{Float64}(undef, 0, 0), max, th)
+    Kmeans(K; max = 1e+8, th = 1e-4) = new{K}(Array{Float64}(undef, 0, 0), max, th)
 end
 
-function clustering(μ, x)
+function clustering(μ, x, K)
     r = zeros(size(x, 1), K)
     for n in 1 : size(x, 1)
         diff = Matrix(undef, size(μ)...)
@@ -19,7 +19,7 @@ function clustering(μ, x)
 end
 
 function update(μ, x, K)
-    r = clustering(μ, x)
+    r = clustering(μ, x, K)
     μ = similar(μ)
     for k in 1 : K
         μ[k, :] = sum(x .* r[:, k], dims=1) / sum(r[:, k])
@@ -31,7 +31,7 @@ end
     fit!(model::Kmeans, x, K)
 x is Number of data × Number of feature
 """
-function fit!(model::Kmeans, x, K)
+function fit!(model::Kmeans{K}, x) where {K}
     coverge(x, th) = @. abs(x) < th
     ma = maximum(x, dims=1)
     mi = minimum(x, dims=1)
@@ -53,4 +53,4 @@ function fit!(model::Kmeans, x, K)
     model.μ = μ
 end
 
-(model::Kmeans)(x) = clustering(model.μ, x)
+(model::Kmeans{K})(x) where{K} = clustering(model.μ, x, K)

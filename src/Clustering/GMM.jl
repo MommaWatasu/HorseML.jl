@@ -1,10 +1,10 @@
-mutable struct GMM
+mutable struct GMM{K}
     π::Vector{Float64}
     μ::Matrix{Float64}
     Σ::Array{Float64, 3}
     max::Int64
     th::Float64
-    GMM(; max = 1e+8, th = 1e-4) = new(Array{Float64}(undef, 0), Array{Float64}(undef, 0, 0), Array{Float64}(undef, 0, 0, 0), max, th)
+    GMM(K; max = 1e+8, th = 1e-4) = new{K}(Array{Float64}(undef, 0), Array{Float64}(undef, 0, 0), Array{Float64}(undef, 0, 0, 0), max, th)
 end
 
 function initialize(x, K, N)
@@ -18,8 +18,7 @@ function initialize(x, K, N)
         mi += interval
     end
     γ[findall(x -> mi < x <= mi+interval, d), K] .= 1
-    println(γ)
-    Mstep(x, γ)
+    Mstep(x, γ, size(x)..., K)
 end
 
 function gauss(x, μ, σ)
@@ -67,7 +66,7 @@ function Mstep(x, γ, N, D, K)
     return π, μ, Σ
 end
 
-function fit!(model::GMM, x, K)
+function fit!(model::GMM{K}, x) where {K}
     coverge(x, th) = @. abs(x) < th
     function coverge(π, μ, Σ, th)
         πb = coverge.(π, th) == trues(size(π)...)
@@ -81,7 +80,6 @@ function fit!(model::GMM, x, K)
         γ = Estep(x, π, μ, Σ, N, K)
         π_new, μ_new, Σ_new = Mstep(x, γ, N, D, K)
         if coverge(π_new - π, μ_new - μ, Σ_new - Σ, model.th)
-            #println(size(π_new), size(μ_new), size(Σ_new))
             model.π, model.μ, model.Σ = vec(π_new), μ_new, Σ_new
             return
         end
@@ -91,8 +89,7 @@ function fit!(model::GMM, x, K)
     model.π, model.μ, model.Σ = vec(π), μ, Σ
 end
 
-function (model::GMM)(x)
-    K = length(model.π)
+function (model::GMM{K})(x) where {K}
     N = size(x, 1)
     Estep(x, model.π, model.μ, model.Σ, N, K)
 end
