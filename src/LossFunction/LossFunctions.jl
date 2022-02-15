@@ -80,6 +80,39 @@ mae(y, t) = mean(abs.(t.-y))
 mae(y::Number, t::Number) = abs(t-y)
 
 @doc raw"""
+    dm(x, y; reduction="mean")
+Distortion Measure. This is used as an evalution function of the Kmeans model. This is the expression:
+```math
+DM(x, y, μ) = \sum^{N-1}_{n=0} \sum^{K-1}_{k=0} y_{nk}|| x_{n} - \mu_{k} ||^2
+```
+"""
+function dm(x::AbstractVector, y::AbstractVector, μ::AbstractMatrix)
+    J = Vector{FLoat32}(size(x, 1))
+    for n in 1 : size(x, 1)
+        J[n] = sum(y[n, :] .* sum(rand(2)' .- model.μ, dims=2))
+    end
+    if reduction=="none"
+        return J
+    elseif reduction=="sum"
+        return sum(J)
+    elseif reduction=="mean"
+        return mean(J)
+    else
+        throw(ArgumentError("`reduction` must be either `none`, `sum` or `mean`"))
+    end
+end
+function dm(x, y, μ::AbstractMatrix)
+    J = Vector{FLoat32}(size(x, 1))
+    for n in 1 : size(x, 1)
+        J[n] = sum(y[n, :] .* sum(x[n, :]' .- model.μ, dims=2))
+    end
+    return J
+end
+function dm(x::Number, y::Number, μ::AbstractMatrix)
+    throw(DomainError("distortion measure doesn't support numbers but Arrays."))
+end
+
+@doc raw"""
     huber(y, t; δ=1, reduction="mean")
 Huber-Loss. If `δ` is large, it will be a function like [`mse`](@ref), and if it is small, it will be a function like [`mae`](@ref). This is the expression:
 ```math
@@ -241,26 +274,26 @@ end
 for lossfunc in LOSSES
     #For Matrix(size of the first dimension is 1) and Vector
     @eval begin
-        function $(lossfunc)(y::AbstractMatrix{TY}, t::AbstractVector{TT}; reduction::String="mean") where {TY, TT}
+        function $(lossfunc)(y::AbstractMatrix{TY}, t::AbstractVector{TT}, args...; reduction::String="mean") where {TY, TT}
             if length(filter(!isone, size(y))) != 1
                 throw(DimensionMismatch("LossFunctions don't support for Matrix!"))
             end
-            $(lossfunc)(vec(y), t, reduction=reduction)
+            $(lossfunc)(vec(y), t, args..., reduction=reduction)
         end
     end
     #For Vector and Number
     @eval begin
-        function $(lossfunc)(y::AbstractVector{T}, t::Number; reduction::String="mean") where {T}
-            $(lossfunc)(y, fill(t, length(y)), reduction=reduction)
+        function $(lossfunc)(y::AbstractVector{T}, t::Number, args...; reduction::String="mean") where {T}
+            $(lossfunc)(y, fill(t, length(y)), args..., reduction=reduction)
         end
     end
     #For Matrix and Number
     @eval begin
-        function $(lossfunc)(y::AbstractMatrix{T}, t::Number; reduction::String="mean") where {T}
+        function $(lossfunc)(y::AbstractMatrix{T}, t::Number, args...; reduction::String="mean") where {T}
             if length(y) == 1
-                return $(lossfunc)(y..., t)
+                return $(lossfunc)(y..., t, args...)
             elseif size(y, 1)==1 || size(y, 2)==1
-                return $(lossfunc)(vec(y), t, reduction=reduction)
+                return $(lossfunc)(vec(y), t, args..., reduction=reduction)
             else
                 throw(DimensionMismatch("LossFunctions don't support for Matrix!"))
             end
