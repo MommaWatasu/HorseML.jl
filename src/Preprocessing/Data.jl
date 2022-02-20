@@ -124,11 +124,11 @@ function databuilder(x::Array{TX, 4}, t::Matrix{TY}; batches = 1) where {TX, TY}
     x, t = Array{PT, 4}(x), Matrix{PT}(t)
     size(x, 1) % batches != 0 && @warn "the data size is not divisible by the batch size! some data will be omitted"
     N = round(Int64, size(x, 1) / batches)
-    x, t = permutedims(x, (2, 3, 1, 4)), transpose(t)
+    x, t = permutedims(x, (2, 3, 4, 1)), transpose(t)
     data = Vector{Tuple{Array{PT, 4}, Matrix{PT}}}(undef, N)
     c = 1
     for n in 1 : N
-        data[n] = (x[:, :, c:n*batches, :], t[:, c:n*batches])
+        data[n] = (x[:, :, :, c:n*batches], t[:, c:n*batches])
         c += batches
     end
     return data

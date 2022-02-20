@@ -1,4 +1,5 @@
 using HorseML.NeuralNetwork
+using HorseML.Preprocessing
 
 @testset "NeuralNetwork" begin
     #Test for utils
@@ -55,7 +56,9 @@ using HorseML.NeuralNetwork
     end
     
     #Test for Conv, Pooling, Flatten, Dropout
-    data = [(rand(Float32, 10, 10, 2, 1), rand(Float32)) for i in 1 : 5]
+    datax = rand(Float32, 5, 10, 10, 2)
+    datay = rand(Float32, 5)
+    data = databuilder(datax, datay)
     NN = NetWork(MeanPool((2, 2)), Conv((2, 2), 2=>1, relu), MaxPool((2, 2)), Flatten(), Dropout(0.25), Dense(4=>1, tanh))
     opt = Descent()
     @test_nowarn train!(NN, loss, data, opt)
