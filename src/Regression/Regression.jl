@@ -2,6 +2,7 @@ module Regression
 
 using LinearAlgebra
 using Statistics
+
 export LinearRegression, Lasso, Ridge, make_design_matrix
 
 include("utils.jl")
