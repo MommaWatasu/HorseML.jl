@@ -4,7 +4,7 @@ using LinearAlgebra
 using Statistics
 
 LOSSES = [
-    :mse, :cee, :mae, :dm, :huber, :logcosh_loss, :poisson, :hinge, :smooth_hinge
+    :mse, :cee, :mae, :dm, :huber, :logcosh_loss, :nlh, :poisson, :hinge, :smooth_hinge
 ]
 
 for f in LOSSES
@@ -78,39 +78,6 @@ function mae(y::AbstractVector, t::AbstractVector; reduction::String="mean")
 end
 mae(y, t) = mean(abs.(t.-y))
 mae(y::Number, t::Number) = abs(t-y)
-
-@doc raw"""
-    dm(x, y; reduction="mean")
-Distortion Measure. This is used as an evalution function of the Kmeans model. This is the expression:
-```math
-DM(x, y, μ) = \sum^{N-1}_{n=0} \sum^{K-1}_{k=0} y_{nk}|| x_{n} - \mu_{k} ||^2
-```
-"""
-function dm(x::AbstractVector, y::AbstractVector, μ::AbstractMatrix; reduction = "mean")
-    J = Array{Float64}(undef, size(x, 1))
-    for n in 1 : size(x, 1)
-        J[n] = sum(y[n, :] .* sum(x[n, :]' .- μ, dims=2))
-    end
-    if reduction=="none"
-        return J
-    elseif reduction=="sum"
-        return sum(J)
-    elseif reduction=="mean"
-        return mean(J)
-    else
-        throw(ArgumentError("`reduction` must be either `none`, `sum` or `mean`"))
-    end
-end
-function dm(x, y, μ)
-    J = Array{Float64}(undef, size(x, 1))
-    for n in 1 : size(x, 1)
-        J[n] = sum(y[n, :] .* sum(x[n, :]' .- μ, dims=2))
-    end
-    return J
-end
-function dm(x::Number, y::Number, μ::AbstractMatrix)
-    throw(DomainError("distortion measure doesn't support numbers but Arrays."))
-end
 
 @doc raw"""
     huber(y, t; δ=1, reduction="mean")
@@ -301,23 +268,6 @@ for lossfunc in LOSSES
     end
 end
 
-function dm(y::AbstractMatrix{TY}, t::AbstractVector{TT}, μ::AbstractMatrix; reduction::String="mean") where {TY, TT}
-    if length(filter(!isone, size(y))) != 1
-        throw(DimensionMismatch("LossFunctions don't support for Matrix!"))
-    end
-    dm(vec(y), t, μ, reduction=reduction)
-end
-function dm(y::AbstractVector{T}, t::Number, μ::AbstractMatrix; reduction::String="mean") where {T}
-    dm(y, fill(t, length(y)), μ, reduction=reduction)
-end
-function dm(y::AbstractMatrix{T}, t::Number, μ::AbstractMatrix; reduction::String="mean") where {T}
-    if length(y) == 1
-        return dm(y..., t, μ)
-    elseif size(y, 1)==1 || size(y, 2)==1
-        return dm(vec(y), t, μ, reduction=reduction)
-    else
-        throw(DimensionMismatch("LossFunctions don't support for Matrix!"))
-    end
-end
+include("clustering.jl")
 
 end
