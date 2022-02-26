@@ -1,6 +1,6 @@
 # HorseML
 
-![logo](https://user-images.githubusercontent.com/76277264/105711246-a16efc00-5f5b-11eb-9e1e-e93955250bd8.png)
+![logo](assets/logo.png)
 
 |GitHub Actions|Coveralls|CodeCov|Docs|
 |:------------:|:-----:|:------:|:--------:|
@@ -20,13 +20,17 @@ This library is ML library for JuliaLang. HorseML can be installed using the Jul
 ## Example
 With HorseML, you can create the following models.
 
-This model is the Decision Tree, you can make the model visualized like this:
-![tree](https://user-images.githubusercontent.com/76277264/144227810-035b0f07-6242-4cf3-9280-af9df17a6d6e.png)
+This model is a Decision Tree, you can make the model visualized like this:
+![tree](assets/tree.png)
 
 
-This model is the polynomial Regression:
+This model is a polynomial Regression:
 
-![polynomial](https://user-images.githubusercontent.com/76277264/144227907-c8f86ba4-afae-416a-ac30-a8ad1eff149c.png)
+![polynomial](assets/regression.png)
+
+THis is a Clustering result:
+
+![clustering](assets/clustering.png)
 
 
 [CI-img]: https://github.com/MommaWatasu/HorseML.jl/actions/workflows/CI.yml/badge.svg
