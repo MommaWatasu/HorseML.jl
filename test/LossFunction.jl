@@ -27,21 +27,4 @@ using CSV
         @test_throws DimensionMismatch f(my3, t)
         @test_nowarn f(t1, t2)
     end
-    
-    df = CSV.read("clustering.csv", DataFrame)
-    x = Array(df)
-    model = Kmeans(3)
-    fit!(model, x)
-    μ = model.μ
-
-    @test_throws DomainError dm(sy, st, μ)
-    @test typeof(dm(y, t, μ)) == Float64
-    @test typeof(dm(y, t, μ, reduction = "sum")) == Float64
-    @test size(dm(y, t, μ, reduction = "none")) == (20, )
-    @test_throws ArgumentError dm(y, t, μ, reduction="NaN")
-    @test_throws DomainError dm(my1, st, μ)
-    @test dm(my2, st, μ) == dm(vec(my2), st, μ)
-    @test_throws DimensionMismatch dm(my3, st, μ)
-    @test dm(my2, t, μ) == dm(y, t, μ)
-    @test_throws DimensionMismatch dm(my3, t, μ)
 end
