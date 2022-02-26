@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        julia-version: ['1.6', '1.6.4', '1.7.0']
+        julia-version: ['1.6', '1.7.0']
     name: build LearningHorse
     steps:
       - uses: actions/checkout@v2
