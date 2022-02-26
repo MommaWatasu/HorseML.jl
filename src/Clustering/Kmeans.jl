@@ -1,3 +1,25 @@
+"""
+    Kmeans(K; max=1e+8, th=1e-4)
+Kmeans method.
+
+# Parameters:
+- K: number of class
+- max: maximum number of repitition
+- th: converge threshold
+
+# Example
+```jldoctest
+julia> model = Kmenas(3)
+Kmeans{3}(Matrix{Float64}(undef, 0, 0), 100000000, 0.0001)
+
+julia> using HorseML.Clustering: fit!
+
+julia> fit!(model, x)
+
+julia> model(x) |> size
+(100, 3)
+```
+"""
 mutable struct Kmeans{K}
     μ::Matrix{Float64}
     max::Int64

@@ -1,3 +1,25 @@
+"""
+    GMM(K; max=1e+8, th=1e-4)
+Gauss Mixture Model. This is useful when the data follow a Gaussian distribution.
+
+# Parameters:
+- K: number of class
+- max: maximum number of repitition
+- th: converge threshold
+
+# Example
+```jldoctest
+julia> model = GMM(3)
+GMM{3}(Float64[], Matrix{Float64}(undef, 0, 0), Array{Float64, 3}(undef, 0, 0, 0), 100000000, 0.0001)
+
+julia> using HorseML.Clustering: fit!
+
+julia> fit!(model, x)
+
+julia> model(x) |> size
+(100, 3)
+```
+"""
 mutable struct GMM{K}
     π::Vector{Float64}
     μ::Matrix{Float64}
