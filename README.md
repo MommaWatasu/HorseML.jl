@@ -28,7 +28,7 @@ This model is a polynomial Regression:
 
 ![polynomial](assets/regression.png)
 
-THis is a Clustering result:
+This is a Clustering result:
 
 ![clustering](assets/clustering.png)
 
