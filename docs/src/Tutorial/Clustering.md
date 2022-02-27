@@ -37,10 +37,10 @@ plot(c1[:, 1], c1[:, 2], seriestype = :scatter, title = "Clusters")
 plot!(c2[:, 1], c2[:, 2], seriestype = :scatter)
 plot!(c3[:, 1], c3[:, 2], seriestype = :scatter)
 ```
-![Tree Visualized](../assets/clutering.png)
+![Tree Visualized](../assets/clustering.png)
 To find the error, you need to use a different function than regression.
 ```
-using HorseML.LOssFunction
+using HorseML.LossFunction
 
 dm(x, model(x), model.μ)
 ```

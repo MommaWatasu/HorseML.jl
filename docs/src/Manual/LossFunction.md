@@ -1,5 +1,6 @@
 # LossFunction
 
+## Normal LossFunctions
 `reduction` specifies the reduction to apply to the output:
 - `none` : do nothing and return the vector of losses.
 - `sum` : return the sum of the losses.
@@ -21,4 +22,10 @@ LossFunction.logcosh_loss
 LossFunction.poisson
 LossFunction.hinge
 LossFunction.smooth_hinge
+```
+
+## LossFunctions for Clustering
+```@docs
+LossFunction.dm
+LossFunction.nlh
 ```

@@ -4,6 +4,13 @@ Distortion Measure. This is used as an evalution function of the Kmeans model. T
 ```math
 DM(x, y, μ) = \sum^{N-1}_{n=0} \sum^{K-1}_{k=0} y_{nk}|| x_{n} - \mu_{k} ||^2
 ```
+
+#Example
+```jldoctest
+julia> model = Kmeans(3);
+
+julia> dm(x, model(x), model.μ);
+```
 """
 function dm(x::AbstractVector, y::AbstractVector, μ::AbstractMatrix; reduction = "mean")
     J = Array{Float64}(undef, size(x, 1))
@@ -64,6 +71,21 @@ function gauss(x, μ, σ)
     return p
 end
 
+@doc raw"""
+    nlh(x, π, μ, σ)
+nagative log-likehood. This is used as an evalution function of the GMM model. This is the expression:
+```math
+E(x, \pi, \mu, \sigma) = - \sum^{N-1}_{n=0} \{ log \sum^{K}_{k=0} π_{k} N(x_{n}|\mu_{k}, \sigma_{k}) \}
+```
+# Example
+```jldoctest
+julia> model = GMM(3);
+
+julia> π, μ, σ = model.π, model.μ, model.σ;
+
+julia> nlh(x, π, μ, σ);
+```
+"""
 function nlh(x, π, μ, σ)
     N, D = size(x)
     K = length(π)
