@@ -8,9 +8,6 @@ Basic gradient descent optimizer with learning rate `η`.
 
 # Parameters
 - learning rate : `η`
-
-# Example
-
 """
 struct Descent
     eta::AbstractFloat
@@ -27,9 +24,6 @@ Momentum gradient descent optimizer with learning rate `η` and parameter of vel
 # Parameters
 - learning rate : `η`
 - parameter of velocity : `α`
-
-# Example
-
 """
 struct Momentum
     eta::AbstractFloat
@@ -52,9 +46,6 @@ Gradient descent optimizer with learning rate attenuation.
 
 # Parameters
 - η : initial learning rate
-
-# Examples
-
 """
 struct AdaGrad
     eta::AbstractFloat
@@ -78,9 +69,6 @@ Gradient descent adaptive moment estimation optimizer.
 # Parameters
 - η : learning rate
 - β : Decay of momentums
-
-# Examples
-
 """
 struct Adam
     eta::AbstractFloat
