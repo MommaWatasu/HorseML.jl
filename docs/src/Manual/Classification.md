@@ -7,6 +7,11 @@ Classification.Logistic
 Classification.SVC
 ```
 
+## Other
+```@docs
+Classification.fit!
+```
+
 # DecisionTree
 
 ## Models

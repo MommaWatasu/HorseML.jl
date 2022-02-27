@@ -1,9 +1,9 @@
 """
     Logistic(; alpha = 0.01, ni = 1000)
-Logistic Regression classifier.
-
-This struct learns classifiers using multi class softmax.
-Parameter `α` indicates the learning rate, and `ni` indicates the number of learnings.
+Logistic Regression classifier. This model learns classifiers using multi class softmax.
+# Parameters
+- `α`: learning rate
+- `ni`: maximum number of repitition
 
 # Example
 ```jldoctest classification
@@ -27,6 +27,15 @@ mutable struct Logistic
     Logistic(; alpha = 0.01, ni=1000) = new(alpha, ni, Array{Float64}(undef, 0, 0))
 end
 
+"""
+    fit!(model, x, t)
+fit the model with the data.
+
+# Parameters
+- `model`: Logistic or SVC structure
+- `x`: training data whose size is (number of data, number of classes)
+- `t`: training data whose size is (number of data, number of classes) and encoded
+"""
 function fit!(model::Logistic, x, t)
     alpha, n_iter = model.α, model.n_iter
     check_size(x, t)

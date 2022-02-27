@@ -15,17 +15,6 @@ pkg> add HorseML
 
 ## Index
 
-### Manual indices
-```@contents
-Pages = [
-    "Manual/Regression.md",
-    "Manual/Classification.md",
-    "Manual/Preprocessing.md",
-    "Manual/LossFunction.md",
-    "Manual/NeuralNetwork.md"
-]
-Depth = 1
-```
 ### Tutorial indices
 ```@contents
 Pages = [
@@ -33,8 +22,22 @@ Pages = [
     "Tutorial/Getting_Started.md",
     "Tutorial/Preprocessing.md",
     "Tutorial/Classifiers.md",
+    "Tutorial/Clustering.md",
     "Tutorial/Tree.md",
     "Tutorial/NeuralNetwork.md"
+]
+Depth = 1
+```
+
+### Manual indices
+```@contents
+Pages = [
+    "Manual/Regression.md",
+    "Manual/Classification.md",
+    "Manual/Clustering.md",
+    "Manual/Preprocessing.md",
+    "Manual/LossFunction.md",
+    "Manual/NeuralNetwork.md"
 ]
 Depth = 1
 ```

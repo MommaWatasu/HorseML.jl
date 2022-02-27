@@ -4,10 +4,13 @@ include("../Preprocessing/Encoder.jl")
     SVC(; alpha=0.01, ni=1000)
 Support Vector Machine Classifier.
 
-This struct learns classifiers using One-Vs-Rest.
+This model learns classifiers using One-Vs-Rest.
 One-Vs-Rest generates two-class classifiers divided into one class and the other classes using Logistic Regression, adopting the most likely one among all classifiers.
 
-Parameter `α` indicates the learning rate, and `ni` indicates the number of learnings.
+# Parameters:
+- `K`: number of class
+- `max`: maximum number of repitition
+- `th`: converge threshold
 
 # Example
 ```jldoctest classification

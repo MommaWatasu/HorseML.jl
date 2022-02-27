@@ -2,10 +2,12 @@
     Conv(kernel, in=>out, σ; stride = 1, pading = 0, set_w = "Xavier")
 This is the traditional convolution layer. `kernel` is a tuple of integers that specifies the kernel size, it must have one or two elements. And, `in` and `out` specifies number of input and out channels.
 
-The input data must have a dimensions WHCB(weight, width, channel, batch). If you want to use a data which has a dimentions WHC, you must be add a dimentioins of B.
+The input data must have a dimensions WHCB(width, height, channel, batch). If you want to use a data which has a dimentions WHC, you must be add a dimentioins of B.
 
-`stride` and `padding` are single integers or tuple(stride is tuple of 2 elements, padding is tuple of 2 elements), and if you specifies `KeepSize` to padding, we adjust sizes of input and return a matrix which has the same sizes.
-`set_w` is `Xavier` or `He`, it decide a method to create a first parameter. This parameter is the same as `Dense()`.
+# Parameters
+- `stride`: specify stride of Convolution layer. This is a integer or tuple of 2 elements
+- `padding`: specify padding of COnvolution layer. This is a integer or tuple of 2 or 4 elements. If you pecidy `KeepSize` for this parameter, we adjust the size of input and return a matrix which has the same sizes.
+- `set_w`: `Xavier` or `He`, it decide a method to create a first parameter. This parameter is the same as `Dense()`.
 
 # Example
 ```

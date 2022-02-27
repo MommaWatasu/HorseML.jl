@@ -1,6 +1,8 @@
 """
     Lasso(; alpha = 0.1, tol = 1e-4, mi = 1e+8)
-Lasso Regression structure. Each parameters are as follows:
+Lasso Regression structure.
+
+# Parameters
 - `alpha` : leaarning rate.
 - `th` : Threshold to judge that it has converged.
 - `max` : Maximum number of learning.

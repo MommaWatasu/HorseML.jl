@@ -1,6 +1,9 @@
 """
     Ridge(alpha = 0.1)
-Ridge Regression. `alpha` is the value multiplied by regularization term.
+Ridge Regression.
+
+# Parameters
+- `alpha`: the value multiplied by regularization term.
 
 # Example
 ```jldoctest regression

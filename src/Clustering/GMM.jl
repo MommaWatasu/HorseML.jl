@@ -3,9 +3,9 @@
 Gauss Mixture Model. This is useful when the data follow a Gaussian distribution.
 
 # Parameters:
-- K: number of class
-- max: maximum number of repitition
-- th: converge threshold
+- `K`: number of class
+- `max`: maximum number of repitition
+- `th`: converge threshold
 
 # Example
 ```jldoctest

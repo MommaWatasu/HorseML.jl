@@ -71,7 +71,11 @@ end
 
 """
     fit!(model, x, t)
-`x` must be the number of data in the first dimension and the number of feature in the second dimension.
+fit a model with data.
+
+# Parameters
+- `model`: LinearRegression, Lasso or Ridge
+- `x`: training data whose size is (number of data, number of features).
 """
 function fit!(model::LinearRegression, x, t)
     check_size(x, t)

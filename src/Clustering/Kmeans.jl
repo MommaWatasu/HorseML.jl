@@ -3,9 +3,9 @@
 Kmeans method.
 
 # Parameters:
-- K: number of class
-- max: maximum number of repitition
-- th: converge threshold
+- `K`: number of class
+- `max`: maximum number of repitition
+- `th`: converge threshold
 
 # Example
 ```jldoctest
@@ -50,8 +50,10 @@ function update(μ, x, K)
 end
 
 """
-    fit!(model::Kmeans, x, K)
-x is Number of data × Number of feature
+    fit!(model, x)
+fit Kmeans or GMM model with data.
+
+size of `x` is (numer of data, number of features).
 """
 function fit!(model::Kmeans{K}, x) where {K}
     coverge(x, th) = @. abs(x) < th

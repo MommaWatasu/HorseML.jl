@@ -25,6 +25,7 @@ makedocs(;
             "LossFunction" => "Manual/LossFunction.md",
             "Regression" => "Manual/Regression.md",
             "Classification" => "Manual/Classification.md",
+            "Clustering" => "Manual/Clustering.md",
             "NeuralNetwork" => "Manual/NeuralNetwork.md",
         ]
     ]

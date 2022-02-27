@@ -10,10 +10,15 @@ end
 
 # Models
 ```@docs
-Kmeans
-GMM
+Clustering.Kmeans
+Clustering.GMM
 ```
 
 ```@meta
 DocTestSetup = nothing
+```
+
+# Other
+```@docs
+Clustering.fit!
 ```

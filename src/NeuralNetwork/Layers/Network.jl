@@ -57,10 +57,16 @@ function Base.show(io::IO, N::NetWork)
 end
 
 """
-    Dense(in=>out, σ; set_w = "Xavier", set_b = zeros, high_accuracy=false)
+    Dense(in=>out, σ; set_w = "Xavier", high_accuracy=false)
 Crate a traditinal `Dense` layer, whose forward propagation is given by:
     σ.(muladd(W, X, b))
 The size of `x` must be `(in)` or `(in, batch)`.
+
+# Parameters
+- `in=>out`: number of I/O unit
+- `σ`: activation
+- `set_w`: `Xavier` or `He`, it decide a method to create a first parameter. you can also specify a function which has number of I/O unit as arguments
+- `high_accuracy`: whether to calculate using Float64
 
 # Example
 ```jldoctest
@@ -83,7 +89,7 @@ function Dense(W::M, σ::F) where {M<:AbstractMatrix, F}
 end
 
 function Dense(io::Pair{<:Integer, <:Integer}, σ;
-        initW=nothing, initb=nothing, set_w = "Xavier", set_b = zeros, high_accuracy::Bool=false)
+        initW=nothing, initb=nothing, set_w = "Xavier", high_accuracy::Bool=false)
     if initW != nothing
         if initb != nothing
             return Dense{typeof(initW), typeof(initb), typeof(σ)}(initW, initb, σ)
@@ -111,7 +117,7 @@ end
 (D::Dense)(x::AbstractArray) = reshape(D(reshape(x, size(x, 1), :)), :, size(x)[2:end]...)
 
 """
-    Denseσ(in=>out, σ; set_w = "Xavier", set_b = zeros, high_accuracy=false)
+    Denseσ(in=>out, σ; set_w = "Xavier", high_accuracy=false)
 Dense layer which you can learn the parametes of the activation function. The implementation perfectly matches Dense layer.
 It is assumued that the activation function will be passed as a structure, and the parameters to be learned must be in the `w` field.
 
@@ -136,7 +142,7 @@ function Denseσ(W::M, σ::F) where {M<:AbstractMatrix, F}
 end
 
 function Denseσ(io::Pair{<:Integer, <:Integer}, σ;
-        initW=nothing, initb=nothing, set_w = "Xavier", set_b = zeros, high_accuracy::Bool=false)
+        initW=nothing, initb=nothing, set_w = "Xavier", high_accuracy::Bool=false)
     if initW != nothing
         if initb != nothing
             return Denseσ{typeof(initW), typeof(initb), typeof(σ)}(initW, initb, σ)

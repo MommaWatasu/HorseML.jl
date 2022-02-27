@@ -7,6 +7,10 @@ end
     make_design_matrix(x, dims)
 This function return the design matrix.
 
+# Parameters
+- `x`: input data
+- `dims`: degree of design matrix
+
 # Example
 ```jldoctest regression
 julia> make_design_matrix(x, dims = 2) |> size
