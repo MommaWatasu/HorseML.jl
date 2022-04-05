@@ -47,14 +47,18 @@ mutable struct HDBSCAN
     end
 end
 
-function fit!(model::HDBSCAN, x)
+function fit!(model::HDBSCAN, x; gen_mst::Bool=true, mst=nothing)
     n = size(x, 1)
-    #calculate core distances for each point
-    core_dists = core_dist(x, model.k)
-    #calculate mutual reachability distance between any two points
-    mrd = mutual_reachability_distance(core_dists, x)
-    #compute a minimum spanning tree by prim method
-    mst = prim(mrd, n)
+    if gen_mst
+        #calculate core distances for each point
+        core_dists = core_dist(x, model.k)
+        #calculate mutual reachability distance between any two points
+        mrd = mutual_reachability_distance(core_dists, x)
+        #compute a minimum spanning tree by prim method
+        mst = prim(mrd, n)
+    elseif mst == nothing
+        throw(ArgumentError("if you set `gen_mst` to false, you must pass a minimum spanning tree as `mst`"))
+    end
     #build HDBSCAN hierarchy
     hierarchy = build_hierarchy(mst, model.min_cluster_size)
     #extract the target cluster
@@ -68,7 +72,9 @@ function fit!(model::HDBSCAN, x)
         end
     end
     model.result = result
-    return mst
+    if gen_mst
+        return mst
+    end
 end
 
 function core_dist(points, k)
