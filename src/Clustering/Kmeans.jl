@@ -59,16 +59,6 @@ size of `x` is (numer of data, number of features).
 """
 function fit!(model::Kmeans{K}, x) where {K}
     coverge(x, th) = @. abs(x) < th
-    #=
-    ma = maximum(x, dims=1)
-    mi = minimum(x, dims=1)
-    interval = (ma-mi) / (K-1)
-    μ = Array{Float64, 2}(undef, K, size(x, 2))
-    for i in 1 : K
-        μ[i, :] = mi
-        mi += interval
-    end
-    =#
     μ = kmeanspp(x, K)
     for _ in 1 : model.max
         μ_new = update(μ, x, K)
