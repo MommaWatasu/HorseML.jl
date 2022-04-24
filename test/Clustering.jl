@@ -1,5 +1,6 @@
 using DataFrames
 using CSV
+using HorseML.LossFunction
 using HorseML.Clustering
 using HorseML.Clustering: fit!
 
@@ -8,7 +9,6 @@ using HorseML.Clustering: fit!
     y, t = rand(20), rand(20)
     my1, my2, my3 = fill!(Array{Float64}(undef, 1, 1), sy), y[:, :], rand(20, 2)
     
-    #Load the data
     df = CSV.read("clustering.csv", DataFrame)
     K = 3
     x = Array(df)
@@ -16,7 +16,6 @@ using HorseML.Clustering: fit!
     #Test for Kmeans
     model = Kmeans(K)
     @test_nowarn fit!(model, x)
-    @test_nowarn model(x)
     
     μ = model.μ
     @test_throws DomainError dm(sy, st, μ)
@@ -33,8 +32,21 @@ using HorseML.Clustering: fit!
     #Test for GMM(Gaussian Mixture Model)
     model = GMM(K)
     @test_nowarn fit!(model, x)
-    @test_nowarn model(x)
     
     π, μ, Σ = model.π, model.μ, model.Σ
     @test nlh(x, π, μ, Σ) ≈ 215.78213657665862
+    
+    #Test for DBSCAN
+    data = CSV.read("clustering2.csv", DataFrame) |> Matrix
+    model = DBSCAN(0.3, 3)
+    @test_nowarn model(data)
+    
+    #Test for HEBSCAN
+    model = HDBSCAN(5, 3)
+    @test_nowarn mst = fit!(model, data)
+    
+    #Test for Xmeans
+    data = CSV.read("clustering3.csv", DataFrame) |> Matrix
+    model = Xmeans()
+    @test_nowarn fit!(model, data)
 end
