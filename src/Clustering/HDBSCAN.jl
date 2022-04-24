@@ -38,7 +38,7 @@ end
 mutable struct HDBSCAN
     k::Int64
     min_cluster_size::Int64
-    result::Union{Vector{Int64}, Nothing}
+    labels::Union{Vector{Int64}, Nothing}
     function HDBSCAN(k::Int64, min_cluster_size::Int64)
         if min_cluster_size < 1
             throw(DomainError(min_cluster_size, "The `min_cluster_size` must be greater than or equal to 1"))
@@ -71,7 +71,7 @@ function fit!(model::HDBSCAN, x; gen_mst::Bool=true, mst=nothing)
             result[k] = i
         end
     end
-    model.result = result
+    model.labels = result
     if gen_mst
         return mst
     end

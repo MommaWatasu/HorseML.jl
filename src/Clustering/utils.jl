@@ -1,5 +1,5 @@
-#const LOG_2π = log(2π)
-#const newaxis = [CartesianIndex()]
+const LOG_2π = log(2π)
+const newaxis = [CartesianIndex()]
 
 # each data point
 mutable struct Point

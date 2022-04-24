@@ -26,7 +26,8 @@ mutable struct GMM{K}
     Σ::Array{Float64, 3}
     max::Int64
     th::Float64
-    GMM(K; max = 1e+8, th = 1e-4) = new{K}(Array{Float64}(undef, 0), Array{Float64}(undef, 0, 0), Array{Float64}(undef, 0, 0, 0), max, th)
+    labels::Vector{Int}
+    GMM(K; max = 300, th = 1e-4) = new{K}(Array{Float64}(undef, 0), Array{Float64}(undef, 0, 0), Array{Float64}(undef, 0, 0, 0), max, th, [])
 end
 
 function initialize(x, K, N)
@@ -89,6 +90,7 @@ function Mstep(x, γ, N, D, K)
 end
 
 function fit!(model::GMM{K}, x) where {K}
+    N = size(x, 1)
     coverge(x, th) = @. abs(x) < th
     function coverge(π, μ, Σ, th)
         πb = coverge.(π, th) == trues(size(π)...)
@@ -103,15 +105,22 @@ function fit!(model::GMM{K}, x) where {K}
         π_new, μ_new, Σ_new = Mstep(x, γ, N, D, K)
         if coverge(π_new - π, μ_new - μ, Σ_new - Σ, model.th)
             model.π, model.μ, model.Σ = vec(π_new), μ_new, Σ_new
+            labels = Array{Int}(undef, N)
+            r = Estep(x, model.π, model.μ, model.Σ, N, K)
+            for i in 1 : size(r, 1)
+                labels[i] = argmax(r[i, :])
+            end
+            model.labels = labels
             return
         end
         π, μ, Σ = π_new, μ_new, Σ_new
     end
     @warn "Not Converged!"
     model.π, model.μ, model.Σ = vec(π), μ, Σ
-end
-
-function (model::GMM{K})(x) where {K}
-    N = size(x, 1)
-    Estep(x, model.π, model.μ, model.Σ, N, K)
+    labels = Array{Int}(undef, N)
+    r = Estep(x, model.π, model.μ, model.Σ, N, K)
+    for i in 1 : size(r, 1)
+        labels[i] = argmax(r[i, :])
+    end
+    model.labels = labels
 end
