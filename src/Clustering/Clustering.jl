@@ -9,6 +9,6 @@ include("GMM.jl")
 include("Kmeans.jl")
 include("DBSCAN.jl")
 include("HDBSCAN.jl")
-#include("Xmeans.jl")
+include("Xmeans.jl")
 
 end
