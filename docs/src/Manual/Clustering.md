@@ -14,7 +14,7 @@ Clustering.Kmeans
 Clustering.Xmeans
 Clustering.GMM
 Clustering.HDBSCAN
-CLustering.DBSCAN
+Clustering.DBSCAN
 ```
 
 ```@meta
