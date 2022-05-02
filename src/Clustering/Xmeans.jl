@@ -34,7 +34,30 @@ end
 function cluster_bic(c::ClusterInfo)
     return -2*log_likehood(c)+c.df*log(c.size)
 end
-    
+
+"""
+    Xmeans(; kinit=2, max=300, th=1e-4)
+Xmeans method. This algorithm uses BIC to determine if a cluster should be split in two.
+In other words, you don't need to give the number of clusters, you can cluster only with the data.
+
+# Parameters:
+- `kinit`: initial number of class
+- `max`: maximum number of repitition
+- `th`: converge threshold
+
+# Example
+```jldoctest
+julia> model = Xmenas()
+Kmeans{3}(Matrix{Float64}(undef, 0, 0), 100000000, 0.0001)
+
+julia> using HorseML.Clustering: fit!
+
+julia> fit!(model, x)
+
+julia> model.labels |> size
+(100, 3)
+```
+"""
 mutable struct Xmeans
     kinit::Int
     max::Int64

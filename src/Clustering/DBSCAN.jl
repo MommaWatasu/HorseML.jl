@@ -9,6 +9,23 @@ end
 # calculate distance between x1 and x2
 dist(p1::Point, p2::Point) = sum((p2.data - p1.data) .^ 2)
 
+"""
+    DBSCAN(ε, minpts)
+Density-based spatial clustering of applications with noise. In a word, if number of neighbors of a data is more than `minpts`, extend a cluster, if not, establish a cluster.
+
+# Parameters:
+- `ε`: maximum distance of neighbors.
+- `minpts`: minimum number of neighbors of a data
+
+# Example
+```jldoctest
+julia> model = DBSCAN(0.3, 5)
+DBSCAN(0.09, 5, 0, Point[])
+
+julia> model(x) |> size
+(100, 3)
+```
+"""
 mutable struct DBSCAN
     ε::Float64
     minpts::Int64

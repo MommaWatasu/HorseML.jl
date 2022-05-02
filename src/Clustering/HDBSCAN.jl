@@ -35,6 +35,31 @@ function compute_stability(c::HDBSCANCluster, λbirth)
     c.stability += sum(c.λp.-λbirth)
 end
 
+"""
+    HDBSCAN(ε, minpts)
+Density-Based Clustering Based on Hierarchical Density Estimates.
+This algorithm performs clustering as follows.
+1. generate a minimum spanning tree
+2. build a HDBSCAN hierarchy
+3. extract the target cluster
+4. generate the list of cluster assignment for each point
+The detail is so complex it is difficult to explain the detail in here. But, if you want to know more about this algorithm, you should read [this docs](https://hdbscan.readthedocs.io/en/latest/how_hdbscan_works.html).
+
+# Parameters:
+- `k`: we will define "core distance of point A" as the distance between point A and the `k` th neighbor point of point A.
+- `min_cluster_size`: minimum number of points in the cluster
+
+# Example
+```jldoctest
+julia> model = HDBSCAN(3, 5)
+HDBSCAN(3, 5, #undef)
+
+julia> fit!(model, data); #What is returned at this time is the minimum spanning tree of the data generated during the clustering process.
+
+julia> model.labels |> size
+(100,)
+```
+"""
 mutable struct HDBSCAN
     k::Int64
     min_cluster_size::Int64
@@ -59,7 +84,7 @@ function fit!(model::HDBSCAN, x; gen_mst::Bool=true, mst=nothing)
     elseif mst == nothing
         throw(ArgumentError("if you set `gen_mst` to false, you must pass a minimum spanning tree as `mst`"))
     end
-    #build HDBSCAN hierarchy
+    #build a HDBSCAN hierarchy
     hierarchy = build_hierarchy(mst, model.min_cluster_size)
     #extract the target cluster
     extract_cluster!(hierarchy)

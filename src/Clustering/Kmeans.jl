@@ -1,5 +1,5 @@
 """
-    Kmeans(K; max=1e+8, th=1e-4)
+    Kmeans(K; max=300, th=1e-4)
 Kmeans method.
 
 # Parameters:
@@ -16,7 +16,7 @@ julia> using HorseML.Clustering: fit!
 
 julia> fit!(model, x)
 
-julia> model(x) |> size
+julia> model.labels |> size
 (100, 3)
 ```
 """

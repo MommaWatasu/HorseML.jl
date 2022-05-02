@@ -11,7 +11,10 @@ end
 # Models
 ```@docs
 Clustering.Kmeans
+Clustering.Xmeans
 Clustering.GMM
+Clustering.HDBSCAN
+CLustering.DBSCAN
 ```
 
 ```@meta

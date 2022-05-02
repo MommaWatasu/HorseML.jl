@@ -16,7 +16,7 @@ julia> using HorseML.Clustering: fit!
 
 julia> fit!(model, x)
 
-julia> model(x) |> size
+julia> model.labels |> size
 (100, 3)
 ```
 """
