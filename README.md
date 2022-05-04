@@ -30,7 +30,7 @@ This model is a polynomial Regression:
 
 This is a Clustering result:
 
-![clustering](assets/clustering.png)
+![clustering](assets/dbscan.png)
 
 
 [CI-img]: https://github.com/MommaWatasu/HorseML.jl/actions/workflows/CI.yml/badge.svg
