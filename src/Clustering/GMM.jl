@@ -2,6 +2,9 @@
     GMM(K; max=1e+8, th=1e-4)
 Gauss Mixture Model. This is useful when the data follow a Gaussian distribution.
 
+!!! warning
+    With this method, the parameter initialization method is tentative and may not give good results.
+
 # Parameters:
 - `K`: number of class
 - `max`: maximum number of repitition
