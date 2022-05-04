@@ -1,5 +1,10 @@
 # HorseML Release Note
 
+## v0.4.1
+- Introduced kmenas++ to kmeans method
+- Changed in k-means and GMM specifications
+- Added Xmenas, HDBSCAN, DBSCAN to Clustering module
+
 ## v0.4.0
 - Added clustering models
 - Added loss functions for clustering models
