@@ -1,17 +1,6 @@
 const LOG_2π = log(2π)
 const newaxis = [CartesianIndex()]
 
-# each data point
-mutable struct Point
-    data::Array
-    label::Int64
-    not_visited::Bool
-    pt::Union{Nothing, Bool}
-    Point(data::Array) = new(data, -1, true, nothing)
-end
-# calculate distance between x1 and x2
-dist(p1::Point, p2::Point) = sum((p2.data - p1.data) .^ 2)
-
 heappush!(h, v) = insert!(h, searchsortedfirst(h, v), v)
 
 mutable struct UnionFind{T <: Integer}
