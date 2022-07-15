@@ -27,8 +27,6 @@ function root(uf::UnionFind{T}, x::T)::T where T<:Integer
     if uf.parent[x] < 0
         return x
     else
-        # uf.parent[x] = root{T}(uf, uf.parent[x])
-        # return uf.parent[x]
         return uf.parent[x] = root(uf, uf.parent[x])
     end
 end
