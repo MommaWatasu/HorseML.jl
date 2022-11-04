@@ -2,6 +2,7 @@ module Preprocessing
 
 export Standard, MinMax, Robust, fit_transform!, inv_transform, dataloader, databuilder, DataSplitter, LabelEncoder, OneHotEncoder
 
+using LinearAlgebra
 using Statistics
 using Random
 using Downloads
