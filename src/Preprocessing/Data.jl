@@ -183,3 +183,22 @@ function (DS::DataSplitter)(xs; dims=1)
     test_index[dims] = DS.test_indices
     return xs[train_index...], xs[test_index...]
 end
+
+function make_circles(; n_samples::Union{Int, Tuple{Int, Int}}=100, shuffle::Bool=true, noise::Union{Nothing, Float64}=nothing, factor::Float64=0.5)
+    if typeof(n_samples) == Int
+        n_samples = (div(n_samples, 2), div(n_samples+1, 2))
+    end
+    θ1 = 0:2π/n_samples[1]:2π
+    θ2 = 0:2π/n_samples[2]:2π
+    data = [hcat(sin.(θ1), cos.(θ1)); hcat(sin.(θ2), cos.(θ2)).*factor]
+    labels = [zeros(Int, n_samples[1]); ones(Int, n_samples[2])]
+    if noise != nothing
+        data+=rand(size(data)...).*noise
+    end
+    if shuffle
+        idx = collect(1:sum(n_samples))
+        shuffle!(idx)
+        return (data[idx, :], labels[idx])
+    end
+    return data
+end
