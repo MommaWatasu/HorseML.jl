@@ -2,16 +2,18 @@ using IRTools: IRTools, IR, Variable, Pipe, xcall, var, prewalk, postwalk,
   blocks, predecessors, successors, argument!, arguments, branches,
   insertafter!, finish, expand!, prune!, substitute!, substitute,
   block, block!, branch!, return!, stmt, meta
-#TODO: is this necessary?It might be better to implement `isexpr` in here.
-using MacroTools: isexpr
 import Base.adjoint
+
+@inline tuple_va(N, xs) = xs
+@inline tuple_va(N, x, xs...) = (x, tuple_va(N, xs...)...)
+@inline tuple_va(::Val{N}, ::Nothing) where N = ntuple(_ -> nothing, Val(N))
 
 iscall(x, m::Module, n::Symbol) = isexpr(x, :call) && x.args[1] == GlobalRef(m, n)
 
 gradindex(x, i) = x[i]
 gradindex(::Nothing, i) = nothing
 xgetindex(x, i...) = xcall(Base, :getindex, x, i...)
-xgradindex(x, i) = xcall(Zygote, :gradindex, x, i)
+xgradindex(x, i) = xcall(AD, :gradindex, x, i)
 
 normalise!(ir) = ir |> IRTools.merge_returns!
 
@@ -93,7 +95,7 @@ function instrument_global!(ir, v, ex)
   else
     ir[v] = prewalk(ex) do x
       istrackable(x) || return x
-      insert!(ir, v, xcall(Zygote, :unwrap, QuoteNode(x), x))
+      insert!(ir, v, xcall(AD, :unwrap, QuoteNode(x), x))
     end
   end
 end
@@ -162,7 +164,7 @@ function primal(ir::IR)
     for (v, st) in pr
         ex = st.expr
         if isexpr(ex, :call) && !ignored(ir, ex)
-            yJ = insert!(pr, v, stmt(xcall(Zygote, :_pullback, cx, ex.args...),
+            yJ = insert!(pr, v, stmt(xcall(AD, :_pullback, cx, ex.args...),
                     line = ir[v].line))
             pr[v] = xgetindex(yJ, 1)
             J = insertafter!(pr, v, stmt(xgetindex(yJ, 2),
@@ -287,30 +289,25 @@ function adjoint(pr::Primal)
     else # Backprop function arguments
       gs = [grad(arg) for arg = arguments(pr.ir)]
       Δ = push!(rb, pr.varargs === nothing ?
-                      xcall(Zygote, :tuple, gs...) :
-                      xcall(Zygote, :tuple_va, Val(pr.varargs), gs...))
+                      xcall(AD, :tuple, gs...) :
+                      xcall(AD, :tuple_va, Val(pr.varargs), gs...))
       branches(rb)[1].args[1] = Δ
     end
   end
   return ir
 end
 
+struct Adjoint
+    primal::IR
+    adjoint::IR
+end
+
 function Adjoint(ir::IR; varargs=nothing, normalise=true)
     pr = Primal(ir, varargs=varargs)
-    println(pr)
     adj = adjoint(pr) |> prune!
     if normalise
       permute!(adj, length(adj.blocks):-1:1)
       adj = IRTools.domorder!(adj) |> IRTools.renumber
     end
     Adjoint(pr.pr, adj)
-end
-
-varargs(m::Method, n) = m.isva ? n - m.nargs + 1 : nothing
-
-function _generate_pullback_via_decomposition(T)
-  (m = meta(T)) === nothing && return
-  va = varargs(m.method, length(T.parameters))
-  forw, back = stacks!(Adjoint(IR(m), varargs = va, normalise = false), T)
-  m, forw, back
 end
