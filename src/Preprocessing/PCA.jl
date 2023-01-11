@@ -2,7 +2,7 @@
 mutable struct PCA
     contributions::Vector{Float64}
     component_vecs::Matrix{Float64}
-    PCA_SVD() = new(Vector{Float64}(undef, 0), Matrix{Float64}(undef, 0, 0))
+    PCA() = new(Vector{Float64}(undef, 0), Matrix{Float64}(undef, 0, 0))
 end
 
 function fit!(pca::PCA, x)
@@ -35,20 +35,19 @@ mutable struct KernelPCA
     γ::Union{Nothing, Float64}
     ε::Float64
     degree::Int
-    KernelPCA(;kernel::Kernel = gaussK,  gamma::Union{Nothing, Float64} = nothing, epsilon::Float64 = 1.0, degree::Int = 3) = new(Matrix{Float64}(undef, 0, 0), kernel, gamma, ε, degree)
+    KernelPCA(;kernel::Kernel = gaussK,  gamma::Union{Nothing, Float64} = nothing, epsilon::Float64 = 1.0, degree::Int = 3) = new(Matrix{Float64}(undef, 0, 0), kernel, gamma, epsilon, degree)
 end
 
 #utils#
 #return distance matrix
 function pairwise(x::AbstractMatrix)
     n, m = size(x)
-    r = Matrix{eltype(x)}(undef, n, n)
-    z = zero(eltype(r))
+    r = Matrix{Float32}(undef, n, n)
     @inbounds for j = 1:n
         for i = 1:(j - 1)
             r[i, j] = r[j, i]
         end
-        r[j, j] = z
+        r[j, j] = 0
         xj = view(x, j, :)
         for i = (j + 1):n
             r[i, j] = sum((view(x, i, :) - xj).^2)
@@ -61,7 +60,7 @@ function make_kernel_matrix(K::Kernel, γ::Float64, ε::Float64, degree::Int, x)
     if K == gaussK
         return exp.(-γ*pairwise(x))
     elseif K == expK
-        return exp.(γ*x*x' .+ ε)
+        return exp.(-γ*x*x' .+ ε)
     elseif K == sigmoidK
         return tanh.(γ*x*x' .+ ε)
     else
@@ -76,9 +75,10 @@ function fit!(kpca::KernelPCA, x::AbstractMatrix)
     n = size(x, 1)
     H = diagm(0 => ones(n)) - ones(n)*ones(n)'/n
     K_ = H*K
-    vals, vecs = eigen(K_)
+    U, vals, vecs = svd(K_)
     perm = sortperm(vals, rev = true)
     kpca.component_vecs = vecs[:, perm]
+    return
 end
 
 function transform(kpca::KernelPCA, x; n_components::Int = size(x, 2))
