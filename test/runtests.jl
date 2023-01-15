@@ -15,8 +15,10 @@ using Test
     @info "Complete the test for Regression"
     include("Classification.jl")
     @info "Complete the test for Classification"
-    include("NeuralNetwork.jl")
-    @info "Complete the test for NeuralNetwork"
     include("Clustering.jl")
     @info "Complete the test for Clustering"
+    include("NeuralNetwork.jl")
+    @info "Complete the test for NeuralNetwork"
+    include("post.jl")
+    @info "Complete postprocessing"
 end

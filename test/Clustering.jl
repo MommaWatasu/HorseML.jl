@@ -9,7 +9,7 @@ using HorseML.Clustering: fit!
     y, t = rand(20), rand(20)
     my1, my2, my3 = fill!(Array{Float64}(undef, 1, 1), sy), y[:, :], rand(20, 2)
     
-    df = CSV.read("clustering.csv", DataFrame)
+    df = CSV.read("data/clustering1.csv", DataFrame)
     K = 3
     x = Array(df)
     
@@ -37,7 +37,7 @@ using HorseML.Clustering: fit!
     @test nlh(x, π, μ, Σ) ≈ 215.78213657665862
     
     #Test for DBSCAN
-    data = CSV.read("clustering2.csv", DataFrame) |> Matrix
+    data = CSV.read("data/clustering2.csv", DataFrame) |> Matrix
     model = DBSCAN(0.3, 3)
     @test_nowarn model(data)
     
@@ -47,7 +47,11 @@ using HorseML.Clustering: fit!
     
     #Test for Xmeans
     #note that this doesn't always success
-    data = CSV.read("clustering3.csv", DataFrame) |> Matrix
+    data = CSV.read("data/clustering3.csv", DataFrame) |> Matrix
     model = Xmeans()
-    @test_skip fit!(model, data)
+    @test_nowarn try
+        fit!(model, data)
+    catch e
+        !isa(e, ArgumentError) && rethrow(e)
+    end
 end

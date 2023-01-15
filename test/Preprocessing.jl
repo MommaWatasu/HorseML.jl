@@ -37,6 +37,7 @@ using DataFrames
         @test_nowarn x2 = fit_transform!(scaler, x1)
     end
     
+    #Robust Scaler
     @testset "Robust Scaler" begin
         scaler = Robust()
         for (data, dim) in zip([x, xt], [1, 2])
@@ -52,7 +53,7 @@ using DataFrames
     #Data Preprocessor
     @testset "Data Preprocessing" begin
         originstdin = stdin
-        f = open("data_test.txt")
+        f = open("data/loader.txt")
         old_stdin = stdin
         redirect_stdin(f)
         @test_nowarn dataloader("MNIST")
@@ -74,6 +75,17 @@ using DataFrames
         @test size(test) == (5, 15)
     end
     
+    @testset "PCA" begin
+        data = Matrix(dataloader("iris"))
+        pca = PCA()
+        @test_nowarn fit_transform!(pca, data[:, 1:4])
+        kernels = [:gauss, :exp, :sigmoid, :poly]
+        for k in kernels
+            kpca = KernelPCA(kernel = k)
+            @test_nowarn fit_transform!(kpca, data[:, 1:4])
+        end
+    end
+    
     @testset "Encoders" begin
         LE = LabelEncoder()
         data = dataloader("iris")
@@ -85,14 +97,14 @@ using DataFrames
         OHE = OneHotEncoder()
         @test_nowarn OHE(encoded_t)
         t = OHE(encoded_t)
-        df = CSV.read("testdata.csv", DataFrame)
+        df = CSV.read("data/preprocessing.csv", DataFrame)
         df.sex = string.(df.sex)
         OHE(df, [:sex, :birth])
     end
     
     @testset "DataBuld" begin
         @test_nowarn databuilder(x, t)
-        t2 = CSV.read("testdata2.csv", DataFrame, header = false)
+        t2 = CSV.read("data/preprocessing2.csv", DataFrame, header = false)
         @test_nowarn databuilder(x, t2)
         @test_nowarn databuilder(Matrix(x), Matrix(t2))
         @test_nowarn databuilder(Matrix(x), Matrix(t2)[:, 1])
