@@ -26,16 +26,18 @@ function fit_transform!(pca::PCA, x; n_components::Int = size(x, 2))
     return transform(pca, x; n_components = n_components)
 end
 
-#This is KernelPCA
-@enum Kernel gaussK expK sigmoidK polyK
-
 mutable struct KernelPCA
     component_vecs::Matrix{Float64}
-    kernel::Kernel
+    kernel::Symbol
     γ::Union{Nothing, Float64}
     ε::Float64
     degree::Int
-    KernelPCA(;kernel::Kernel = gaussK,  gamma::Union{Nothing, Float64} = nothing, epsilon::Float64 = 1.0, degree::Int = 3) = new(Matrix{Float64}(undef, 0, 0), kernel, gamma, epsilon, degree)
+    function KernelPCA(;kernel::Symbol = :gauss,  gamma::Union{Nothing, Float64} = nothing, epsilon::Float64 = 1.0, degree::Int = 3)
+        if !(kernel in [:gauss, :exp, :sigmoid, :poly])
+            throw(DomainError("`kernel` must be gauss, exp, sigmoid or poly"))
+        end
+        new(Matrix{Float64}(undef, 0, 0), kernel, gamma, epsilon, degree)
+    end
 end
 
 #utils#
@@ -56,14 +58,14 @@ function pairwise(x::AbstractMatrix)
     return r
 end
 
-function make_kernel_matrix(K::Kernel, γ::Float64, ε::Float64, degree::Int, x)
-    if K == gaussK
+function make_kernel_matrix(K::Symbol, γ::Float64, ε::Float64, degree::Int, x)
+    if K == :gauss
         return exp.(-γ*pairwise(x))
-    elseif K == expK
+    elseif K == :exp
         return exp.(-γ*x*x' .+ ε)
-    elseif K == sigmoidK
+    elseif K == :sigmoid
         return tanh.(γ*x*x' .+ ε)
-    else
+    elseif K == :poly
         return (γ*x*x' .+ ε).^degree
     end
 end

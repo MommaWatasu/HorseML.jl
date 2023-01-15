@@ -1,6 +1,6 @@
 module Preprocessing
 
-export Standard, MinMax, Robust, fit_transform!, inv_transform, dataloader, databuilder, DataSplitter, LabelEncoder, OneHotEncoder
+export Standard, MinMax, Robust, fit_transform!, inv_transform, dataloader, databuilder, DataSplitter, LabelEncoder, OneHotEncoder, PCA, KernelPCA
 
 using LinearAlgebra
 using Statistics
