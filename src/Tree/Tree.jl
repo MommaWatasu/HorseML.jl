@@ -1,6 +1,6 @@
 module Tree
 
-include("../utils.jl")
+import ..sample
 
 export DecisionTree, MV, RandomForest
 
