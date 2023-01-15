@@ -10,7 +10,7 @@ jobs:
         julia-version: ['1.6', '1.7', '1.8']
     name: build LearningHorse
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Set up Julia
         uses: julia-actions/setup-julia@v1
         with:
@@ -26,8 +26,3 @@ jobs:
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           file: lcov.info
-      - name: Upload coverage to Coveralls
-        uses: coverallsapp/github-action@master
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          path-to-lcov: "lcov.info"
