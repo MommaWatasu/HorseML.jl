@@ -9,6 +9,7 @@ using Downloads
 using CSV
 using DataFrames
 import ..sample
+import ..@dataframe_func
 
 include("utils.jl")
 include("Data.jl")

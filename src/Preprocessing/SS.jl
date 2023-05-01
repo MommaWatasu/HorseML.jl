@@ -66,21 +66,23 @@ mutable struct Standard
     Standard() = new(Array{Float64}(undef, 0))
 end
 
-"""
+@doc """
     fit!(scaler, x; dims=1)
 fit the scaler with `x`. `dims` is the dimension of the number of data.
-"""
-function fit!(scaler::Standard, x; dims=1)
+""" fit!
+
+@dataframe_func function fit!(scaler::Standard, x::AbstractMatrix; dims=1)
     scaler.p = vcat(mean(x, dims=dims), std(x, dims=dims))
 end
 
 ss(x, m, s) = @. (x-m)/s
 
-"""
+@doc """
     transform(scaler, x; dims=1)
 transform data with scaler. `dims` is the dimension of the number of data.
-"""
-function transform(scaler::Standard, x; dims=1)
+""" transform
+
+@dataframe_func function transform(scaler::Standard, x::AbstractMatrix; dims=1)
     p = scaler.p
     check_size(x, p, dims)
     y = similar(x, Float32)
@@ -96,22 +98,24 @@ function transform(scaler::Standard, x; dims=1)
     return y
 end
 
-"""
+@doc """
     fit_transform!(scaler, x; dims=1)
 fit scaler with `x`, and transform `x`. `dims` is the dimension of the number of data.
-"""
-function fit_transform!(scaler::Standard, x; dims=1)
+""" fit_transform!
+
+@dataframe_func function fit_transform!(scaler::Standard, x::AbstractMatrix; dims=1)
     fit!(scaler, x, dims=dims)
     transform(scaler, x, dims=dims)
 end
 
 iss(x, m, s) = @. x*s+m
 
-"""
+@doc """
     inv_transform(scaler, x; dims=1)
 Convert `x` in reverse. `dims` is the dimension of the number of data.
-"""
-function inv_transform(scaler::Standard, x; dims=1)
+""" inv_transform
+
+@dataframe_func function inv_transform(scaler::Standard, x::AbstractMatrix; dims=1)
     p = scaler.p
     check_size(x, p, dims)
     y = similar(x, Float32)

@@ -5,7 +5,7 @@ mutable struct PCA
     PCA() = new(Vector{Float64}(undef, 0), Matrix{Float64}(undef, 0, 0))
 end
 
-function fit!(pca::PCA, x)
+@dataframe_func function fit!(pca::PCA, x::AbstractMatrix)
     #normalize
     x_ = x .- mean(x, dims=1)
     
@@ -15,13 +15,13 @@ function fit!(pca::PCA, x)
     pca.component_vecs = vecs[:, perm]
 end
 
-function transform(pca::PCA, x; n_components::Int = size(x, 2))
+@dataframe_func function transform(pca::PCA, x::AbstractMatrix; n_components::Int = size(x, 2))
     n_components > size(x, 2) && throw(DimensionMismatch("n_components must be less than or equal to `size(x, 2)`"))
     x_ = x .- mean(x, dims=1)
     return x_ * pca.component_vecs[:, 1:n_components]
 end
 
-function fit_transform!(pca::PCA, x; n_components::Int = size(x, 2))
+@dataframe_func function fit_transform!(pca::PCA, x::AbstractMatrix; n_components::Int = size(x, 2))
     fit!(pca, x)
     return transform(pca, x; n_components = n_components)
 end
@@ -71,7 +71,7 @@ function make_kernel_matrix(K::Symbol, γ::Float64, ε::Float64, degree::Int, x)
 end
 #utils#
 
-function fit!(kpca::KernelPCA, x::AbstractMatrix)
+@dataframe_func function fit!(kpca::KernelPCA, x::AbstractMatrix)
     γ = (kpca.γ　==  nothing) ? 1 / size(x, 2) : kpca.γ
     K = make_kernel_matrix(kpca.kernel, γ, kpca.ε, kpca.degree, x)
     n = size(x, 1)
@@ -83,12 +83,12 @@ function fit!(kpca::KernelPCA, x::AbstractMatrix)
     return
 end
 
-function transform(kpca::KernelPCA, x; n_components::Int = size(x, 2))
+@dataframe_func function transform(kpca::KernelPCA, x::AbstractMatrix; n_components::Int = size(x, 2))
     n_components > size(x, 2) && throw(DimensionMismatch("n_components must be less than or equal to `size(x, 2)`"))
     return x * kpca.component_vecs[1:size(x, 2), 1:n_components]
 end
 
-function fit_transform!(kpca::KernelPCA, x; n_components::Int = size(x, 2))
+@dataframe_func function fit_transform!(kpca::KernelPCA, x::AbstractMatrix; n_components::Int = size(x, 2))
     fit!(kpca, x)
     return transform(kpca, x, n_components = n_components)
 end
