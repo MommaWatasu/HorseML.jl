@@ -71,7 +71,7 @@ end
 fit the scaler with `x`. `dims` is the dimension of the number of data.
 """ fit!
 
-@dataframe_func function fit!(scaler::Standard, x::AbstractMatrix; dims=1)
+@dataframe_func function fit!(scaler::Standard, x::AbstractArray; dims=1)
     scaler.p = vcat(mean(x, dims=dims), std(x, dims=dims))
 end
 
@@ -82,7 +82,7 @@ ss(x, m, s) = @. (x-m)/s
 transform data with scaler. `dims` is the dimension of the number of data.
 """ transform
 
-@dataframe_func function transform(scaler::Standard, x::AbstractMatrix; dims=1)
+@dataframe_func function transform(scaler::Standard, x::AbstractArray; dims=1)
     p = scaler.p
     check_size(x, p, dims)
     y = similar(x, Float32)
@@ -103,7 +103,7 @@ end
 fit scaler with `x`, and transform `x`. `dims` is the dimension of the number of data.
 """ fit_transform!
 
-@dataframe_func function fit_transform!(scaler::Standard, x::AbstractMatrix; dims=1)
+@dataframe_func function fit_transform!(scaler::Standard, x::AbstractArray; dims=1)
     fit!(scaler, x, dims=dims)
     transform(scaler, x, dims=dims)
 end
@@ -115,7 +115,7 @@ iss(x, m, s) = @. x*s+m
 Convert `x` in reverse. `dims` is the dimension of the number of data.
 """ inv_transform
 
-@dataframe_func function inv_transform(scaler::Standard, x::AbstractMatrix; dims=1)
+@dataframe_func function inv_transform(scaler::Standard, x::AbstractArray; dims=1)
     p = scaler.p
     check_size(x, p, dims)
     y = similar(x, Float32)

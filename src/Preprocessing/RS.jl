@@ -43,7 +43,7 @@ mutable struct Robust
     Robust() = new(Array{Float64}(undef, 0))
 end
 
-@dataframe_func function fit!(scaler::Robust, x::AbstractMatrix; dims=1)
+@dataframe_func function fit!(scaler::Robust, x::AbstractArray; dims=1)
     if dims == 1
         scaler.p = hcat([quantile(x[:, i], [0.25, 0.5, 0.75]) for i in 1 : size(x, 2)]...)
     elseif dims == 2
@@ -53,7 +53,7 @@ end
 
 rs(x, q1, q2, q3) = @. (x-q2) / (q3-q1)
 
-@dataframe_func function transform(scaler::Robust, x::AbstractMatrix; dims=1)
+@dataframe_func function transform(scaler::Robust, x::AbstractArray; dims=1)
     p = scaler.p
     check_size(x, p, dims)
     y = similar(x, Float32)
@@ -69,14 +69,14 @@ rs(x, q1, q2, q3) = @. (x-q2) / (q3-q1)
     return y
 end
 
-@dataframe_func function fit_transform!(scaler::Robust, x::AbstractMatrix; dims=1)
+@dataframe_func function fit_transform!(scaler::Robust, x::AbstractArray; dims=1)
     fit!(scaler, x, dims=dims)
     transform(scaler, x; dims=dims)
 end
 
 irs(x, q1, q2, q3) = @. x*(q3-q1)+q2
 
-@dataframe_func function inv_transform(scaler::Robust, x::AbstractMatrix; dims=1)
+@dataframe_func function inv_transform(scaler::Robust, x::AbstractArray; dims=1)
     p = scaler.p
     check_size(x, p, dims)
     y = similar(x, Float32)

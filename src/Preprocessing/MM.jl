@@ -42,13 +42,13 @@ mutable struct MinMax
     MinMax() = new(Array{Float64}(undef, 0))
 end
 
-@dataframe_func function fit!(scaler::MinMax, x::AbstractMatrix; dims=1)
+@dataframe_func function fit!(scaler::MinMax, x::AbstractArray; dims=1)
     scaler.p = vcat(maximum(x, dims=dims), minimum(x, dims=dims))
 end 
 
 mms(x, ma, mi) = @. (x-mi) / (ma - mi)
 
-@dataframe_func function transform(scaler::MinMax, x::AbstractMatrix; dims=1)
+@dataframe_func function transform(scaler::MinMax, x::AbstractArray; dims=1)
     p = scaler.p
     check_size(x, p, dims)
     y = similar(x, Float32)
@@ -64,14 +64,14 @@ mms(x, ma, mi) = @. (x-mi) / (ma - mi)
     return y
 end
 
-@dataframe_func function fit_transform!(scaler::MinMax, x::AbstractMatrix; dims=1)
+@dataframe_func function fit_transform!(scaler::MinMax, x::AbstractArray; dims=1)
     fit!(scaler, x, dims=dims)
     transform(scaler, x, dims=dims)
 end
 
 imms(x, ma, mi) = @. x*(ma-mi)+mi
 
-@dataframe_func function inv_transform(scaler::MinMax, x::AbstractMatrix; dims=1)
+@dataframe_func function inv_transform(scaler::MinMax, x::AbstractArray; dims=1)
     p = scaler.p
     check_size(x, p, dims)
     y = similar(x, Float32)
