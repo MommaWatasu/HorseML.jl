@@ -22,6 +22,7 @@ using DataFrames
         end
         @test_throws DimensionMismatch Preprocessing.transform(scaler, x1)
         @test_nowarn fit_transform!(scaler, x1)
+        @test_nowarn fit_transform!(scaler, DataFrame(xt, :auto))
     end
 
     #MinMaxScaler
