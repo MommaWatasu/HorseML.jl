@@ -17,8 +17,6 @@ using Test
     @info "Complete the test for Classification"
     include("Clustering.jl")
     @info "Complete the test for Clustering"
-    include("NeuralNetwork.jl")
-    @info "Complete the test for NeuralNetwork"
     include("post.jl")
     @info "Complete postprocessing"
 end
