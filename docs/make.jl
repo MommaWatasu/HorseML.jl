@@ -1,7 +1,6 @@
 using Documenter
 using HorseML
 using HorseML.Preprocessing
-using HorseML.NeuralNetwork
 using HorseML.Regression
 using HorseML.LossFunction
 using HorseML.Classification
@@ -18,7 +17,6 @@ makedocs(;
             "Classifiers" => "Tutorial/Classifiers.md",
             "Clustering" => "Tutorial/Clustering.md",
             "Tree" => "Tutorial/Tree.md",
-            "NeuralNetwork" => "Tutorial/NeuralNetwork.md"
         ],
         "Manual" => [
             "Preprocessing" => "Manual/Preprocessing.md",
@@ -26,7 +24,6 @@ makedocs(;
             "Regression" => "Manual/Regression.md",
             "Classification" => "Manual/Classification.md",
             "Clustering" => "Manual/Clustering.md",
-            "NeuralNetwork" => "Manual/NeuralNetwork.md",
         ]
     ]
 )

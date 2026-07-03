@@ -24,7 +24,6 @@ Pages = [
     "Tutorial/Classifiers.md",
     "Tutorial/Clustering.md",
     "Tutorial/Tree.md",
-    "Tutorial/NeuralNetwork.md"
 ]
 Depth = 1
 ```
@@ -37,7 +36,6 @@ Pages = [
     "Manual/Clustering.md",
     "Manual/Preprocessing.md",
     "Manual/LossFunction.md",
-    "Manual/NeuralNetwork.md"
 ]
 Depth = 1
 ```
