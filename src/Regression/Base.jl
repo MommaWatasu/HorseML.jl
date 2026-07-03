@@ -80,7 +80,8 @@ fit a model with data.
 function fit!(model::LinearRegression, x, t)
     check_size(x, t)
     x = expand(x)
-    model.w = inv(x' * x) * x' * t
+    # \ operator is more stable than inv(x' * x) * x' * t
+    model.w = x \ t
 end
 
 (model::LinearRegression)(x) = expand(x) * model.w
